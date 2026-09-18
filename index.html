@@ -1128,7 +1128,9 @@
 
       <div style="display: flex; justify-content: space-between; align-items: center; pt: 10px; border-top: 1px solid var(--border-color);">
         <span id="konrad-item-count" style="font-size: 0.78rem; color: var(--text-muted);">0 Einträge</span>
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <button type="button" class="chip-btn" style="color: #60a5fa; border-color: rgba(96, 165, 250, 0.4); font-size: 0.78rem;" onclick="downloadCurrentHtml()" title="Aktuelle HTML-Datei (mit allen Daten) herunterladen">📥 HTML downloaden</button>
+          <button type="button" class="chip-btn" style="color: #86efac; border-color: rgba(74, 222, 128, 0.4); font-size: 0.78rem;" onclick="downloadCurrentSql()" title="Aktuelle BW.sql Datei herunterladen">💾 BW.sql downloaden</button>
           <button type="button" id="konrad-btn-clear" class="chip-btn" style="color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 0.78rem;" onclick="handleKonradClearCurrentTab()">🗑️ Logins leeren</button>
           <button type="button" class="btn-primary" style="padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem;" onclick="closeKonradModal()">Fertig</button>
         </div>
@@ -1452,9 +1454,9 @@
       { id: 27, name: 'Holger', ausweis: '802013-122' },
       { id: 28, name: 'Rico', ausweis: '782006-111' },
       { id: 29, name: 'Sören', ausweis: '782005-108' },
-      { id: 30, name: 'Dirk', ausweis: '800000-133' },
-      { id: 31, name: 'Nils', ausweis: '800000-134' },
-      { id: 32, name: 'Enno', ausweis: '800000-135' },
+      { id: 30, name: 'Dirk', ausweis: '642018-128' },
+      { id: 31, name: 'Nils', ausweis: '862018-129' },
+      { id: 32, name: 'Enno', ausweis: '822019-127' },
       { id: 33, name: 'Marco', ausweis: '772025-126' }
     ];
 
@@ -2789,6 +2791,29 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
       document.getElementById('login-overlay').classList.remove('hidden');
       document.getElementById('login-name').value = '';
       document.getElementById('login-pass').value = '';
+    }
+
+    function downloadCurrentHtml() {
+      const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bierwanderung.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+    function downloadCurrentSql() {
+      // Direkter Download der BW.sql Datei
+      const a = document.createElement('a');
+      a.href = 'BW.sql';
+      a.download = 'BW.sql';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
 
     // Init on start
