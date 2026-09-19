@@ -1032,35 +1032,67 @@
     .bw-year-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 20px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      border-radius: 18px;
+      padding: 0;
+      margin-bottom: 12px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+      overflow: hidden;
     }
     .bw-year-card:hover {
-      border-color: rgba(255, 184, 0, 0.35);
+      border-color: rgba(255, 184, 0, 0.4);
+    }
+    .bw-year-card.open {
+      border-color: rgba(255, 184, 0, 0.55);
+      box-shadow: 0 8px 24px rgba(255, 184, 0, 0.12), 0 4px 18px rgba(0,0,0,0.35);
     }
     .bw-year-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      gap: 10px;
+      padding: 16px 18px;
+      cursor: pointer;
+      user-select: none;
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .bw-year-header:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .bw-year-card.open .bw-year-header {
+      background: rgba(255, 184, 0, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .bw-year-title {
       display: flex;
-      align-items: baseline;
-      gap: 8px;
+      align-items: center;
+      gap: 10px;
     }
     .bw-year-badge {
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       font-weight: 900;
       color: #fff;
       letter-spacing: -0.02em;
+    }
+    .bw-year-card.open .bw-year-badge {
+      color: var(--primary);
+    }
+    .bw-year-chevron {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-left: 6px;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: bold;
+    }
+    .bw-year-card.open .bw-year-chevron {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+    .bw-year-body {
+      padding: 18px;
+      animation: fadeIn 0.2s ease-in-out;
     }
     .bw-tour-num {
       font-size: 0.78rem;
@@ -1665,29 +1697,31 @@
           <button type="button" class="bw-filter-pill active" onclick="filterBwYear('all', this)">Alle (22)</button>
           <button type="button" class="bw-filter-pill" onclick="filterBwYear('photos', this)">📸 Mit Foto (14)</button>
           <button type="button" class="bw-filter-pill" onclick="filterBwYear('founders', this)">🏛️ Gründungsjahre (2)</button>
+          <button type="button" class="bw-filter-pill" onclick="expandAllBwYears()" title="Alle Jahre aufklappen">📂 Alle aufklappen</button>
+          <button type="button" class="bw-filter-pill" onclick="collapseAllBwYears()" title="Alle Jahre zuklappen">📁 Alle zuklappen</button>
           <div style="display: inline-flex; align-items: center; margin-left: 4px;">
             <select id="bw-year-jump" class="bw-jump-select" onchange="jumpToBwYear(this.value)">
-              <option value="">Direkt zu Jahr springen...</option>
+              <option value="">Jahr auswählen & öffnen...</option>
             </select>
           </div>
         </div>
 
-        <!-- Gruppenbilder Upload Bar -->
-        <div class="bw-import-box" id="bw-dropzone" 
+        <!-- Gruppenbilder Upload Bar (Nur für Konrad sichtbar) -->
+        <div class="bw-import-box" id="bw-dropzone" style="display: none;"
              ondragover="handleBwDragOver(event)" 
              ondragleave="handleBwDragLeave(event)" 
              ondrop="handleBwDrop(event)">
           <div style="display: flex; align-items: center; gap: 10px;">
             <div style="font-size: 1.8rem;">🖼️</div>
             <div>
-              <div style="font-weight: 700; color: #fef08a; font-size: 0.88rem;">Gruppenbilder direkt einbinden</div>
+              <div style="font-weight: 700; color: #fef08a; font-size: 0.88rem;">Gruppenbilder verwalten (Admin: Konrad)</div>
               <div style="font-size: 0.75rem; color: var(--text-muted);">
-                Fotos (z. B. 2026.jpeg, 2025.jpg, 2024.jpg...) auswählen oder hierher ziehen. Werden sofort dauerhaft im Browser gespeichert!
+                Fotos (z. B. 2026.jpeg, 2025.jpg, 2024.jepg, 2024.jpeg...) hochladen oder hierher ziehen. Anschließend unten auf <strong>«bierwanderung.html herunterladen»</strong> klicken, damit alle Wanderer die Bilder sehen können!
               </div>
             </div>
           </div>
           <div style="display: flex; gap: 8px; align-items: center;">
-            <input type="file" id="bw-batch-files-input" multiple accept="image/*" style="display: none;" onchange="handleBatchPhotoUpload(event)">
+            <input type="file" id="bw-batch-files-input" multiple accept="image/*,.jpeg,.jpg,.png,.webp,.jepg" style="display: none;" onchange="handleBatchPhotoUpload(event)">
             <button type="button" class="btn-primary" style="padding: 7px 14px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px;" onclick="document.getElementById('bw-batch-files-input').click()">
               <span>📂</span> Fotos auswählen
             </button>
@@ -1701,9 +1735,9 @@
       <!-- Download Banner at the bottom of the chronik -->
       <div class="card" style="margin-top: 24px; text-align: center; background: linear-gradient(135deg, rgba(255, 184, 0, 0.15), rgba(32, 35, 43, 0.95)); border: 1px solid rgba(255, 184, 0, 0.4); padding: 20px;">
         <div style="font-size: 2rem; margin-bottom: 8px;">💾</div>
-        <h3 style="font-size: 1.1rem; font-weight: 800; color: #fef08a;">Chronik offline sichern</h3>
-        <p style="font-size: 0.82rem; color: var(--text-muted); max-width: 480px; margin: 6px auto 14px auto; line-height: 1.4;">
-          Lade die komplette Chronik aller Bierwanderungen von 2005 bis 2026 als eigenständige HTML-Datei auf dein Handy oder deinen PC herunter.
+        <h3 style="font-size: 1.1rem; font-weight: 800; color: #fef08a;">Chronik & Gruppenbilder sichern</h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); max-width: 520px; margin: 6px auto 14px auto; line-height: 1.4;">
+          Lade die komplette Chronik aller Bierwanderungen (inklusive aller hochgeladenen Gruppenbilder) als eigenständige HTML-Datei herunter. Wenn du die Datei an die Gruppe schickst oder auf deinem Webspace ablegst, haben alle sofort alle Bilder!
         </p>
         <button type="button" class="btn-primary" style="padding: 10px 22px; font-size: 0.9rem; font-weight: 700; margin: 0 auto; display: inline-flex; align-items: center; gap: 8px;" onclick="downloadCurrentHtml()">
           <span>📥</span> bierwanderung.html herunterladen
@@ -2984,6 +3018,11 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
       const isKonrad = isKonradLoggedIn();
       const headerBadge = document.getElementById('konrad-header-badge');
       const tabBadge = document.getElementById('konrad-ai-tab-badge');
+      const dropzone = document.getElementById('bw-dropzone');
+
+      if (dropzone) {
+        dropzone.style.display = isKonrad ? 'flex' : 'none';
+      }
 
       if (isKonrad) {
         if (headerBadge) headerBadge.style.display = 'inline-flex';
@@ -2995,6 +3034,11 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
         // Falls Konrad-Modal offen war und der Nutzer ist nicht Konrad, sofort schließen
         const modal = document.getElementById('konrad-modal');
         if (modal) modal.classList.add('hidden');
+      }
+
+      // Re-render Chronik to toggle Konrad-exclusive photo buttons (Upload/Reset)
+      if (typeof renderBierwanderungen === 'function' && document.getElementById('bw-years-container')) {
+        renderBierwanderungen(currentBwFilter);
       }
     }
 
@@ -3325,7 +3369,7 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
       },
       2024: {
         number: 20,
-        photos: [{ file: '2024.jpg', caption: 'Gruppenbild 2024 vor dem Blumenhaus (Dunkelgraue Shirts)' }],
+        photos: [{ file: '2024.jpeg', caption: 'Gruppenbild 2024 vor dem Blumenhaus (Dunkelgraue Shirts)' }],
         location: 'Hausfassade mit leuchtend gelben Blumenkästen',
         shirts: 'Dunkelgraue T-Shirts mit Brustlogo',
         note: 'Doppelsieg: Clemens und Mirko teilen sich den Titel mit je 17 Bieren.'
@@ -3333,8 +3377,7 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
       2023: {
         number: 19,
         photos: [
-          { file: '2023.jpg', caption: 'Foto 1: Historischer Torbogen (Marineblaue Shirts)' },
-          { file: '2023-2.jpg', caption: 'Foto 2: Biergarten Bad Brambacher (Kühles Dunkelbier am Tisch)' }
+          { file: '2023.jpg', caption: 'Gruppenbild 2023 vor dem historischen Torbogen (Marineblaue Shirts)' }
         ],
         location: 'Historisches Tor mit rot-weißem Balkengatter & Bad Brambacher Biergarten',
         shirts: 'Marineblaue T-Shirts mit Wappen',
@@ -3469,6 +3512,43 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
     };
 
     let currentBwFilter = 'all';
+    const bwExpandedYears = new Set(); // Stores which years are currently expanded
+
+    function toggleBwYear(year) {
+      const card = document.getElementById(`bw-year-${year}`);
+      const body = document.getElementById(`bw-body-${year}`);
+      if (!card || !body) return;
+
+      if (bwExpandedYears.has(year)) {
+        bwExpandedYears.delete(year);
+        card.classList.remove('open');
+        body.style.display = 'none';
+      } else {
+        bwExpandedYears.add(year);
+        card.classList.add('open');
+        body.style.display = 'block';
+      }
+    }
+
+    function expandAllBwYears() {
+      for (let y = 2026; y >= 2005; y--) {
+        bwExpandedYears.add(y);
+        const card = document.getElementById(`bw-year-${y}`);
+        const body = document.getElementById(`bw-body-${y}`);
+        if (card) card.classList.add('open');
+        if (body) body.style.display = 'block';
+      }
+    }
+
+    function collapseAllBwYears() {
+      bwExpandedYears.clear();
+      for (let y = 2026; y >= 2005; y--) {
+        const card = document.getElementById(`bw-year-${y}`);
+        const body = document.getElementById(`bw-body-${y}`);
+        if (card) card.classList.remove('open');
+        if (body) body.style.display = 'none';
+      }
+    }
 
     function renderBierwanderungen(filterType = 'all') {
       currentBwFilter = filterType;
@@ -3478,7 +3558,7 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
 
       // Populate Select Jump Dropdown once
       if (select && select.options.length <= 1) {
-        select.innerHTML = '<option value="">Direkt zu Jahr springen...</option>';
+        select.innerHTML = '<option value="">Jahr auswählen & öffnen...</option>';
         for (let y = 2026; y >= 2005; y--) {
           const meta = BIERWANDERUNGEN_META[y];
           const opt = document.createElement('option');
@@ -3550,6 +3630,8 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
           }
         }
 
+        const isKonrad = isKonradLoggedIn();
+
         // Gruppenbilder
         let photosHtml = '';
         if (meta.photos && meta.photos.length > 0) {
@@ -3574,7 +3656,7 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
                 </div>
                 <div class="bw-photo-caption" style="display: flex; justify-content: space-between; align-items: center;">
                   <span>📸 ${escapeHtml(photo.caption)}</span>
-                  ${customSrc ? `<button type="button" class="chip-btn" style="padding: 2px 8px; font-size: 0.68rem; color: #f87171;" onclick="event.stopPropagation(); removeCustomPhoto(${year})">✕ Zurücksetzen</button>` : ''}
+                  ${(customSrc && isKonrad) ? `<button type="button" class="chip-btn" style="padding: 2px 8px; font-size: 0.68rem; color: #f87171;" onclick="event.stopPropagation(); removeCustomPhoto(${year})">✕ Zurücksetzen</button>` : ''}
                 </div>
               </div>
             `;
@@ -3590,7 +3672,7 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
               </div>
               <div class="bw-photo-caption" style="display: flex; justify-content: space-between; align-items: center;">
                 <span>📸 Eigenes Gruppenbild ${year}</span>
-                <button type="button" class="chip-btn" style="padding: 2px 8px; font-size: 0.7rem; color: #f87171;" onclick="removeCustomPhoto(${year})">✕ Entfernen</button>
+                ${isKonrad ? `<button type="button" class="chip-btn" style="padding: 2px 8px; font-size: 0.7rem; color: #f87171;" onclick="removeCustomPhoto(${year})">✕ Entfernen</button>` : ''}
               </div>
             </div>
           `;
@@ -3599,11 +3681,15 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
             <div class="bw-no-photo-card">
               <div style="font-size: 1.8rem; margin-bottom: 4px;">📷</div>
               <div style="font-weight: 700; color: #d1d5db; font-size: 0.85rem;">Kein Gruppenbild für ${year} im Archiv</div>
-              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; margin-bottom: 8px;">Liegt dir ein Gruppenbild aus diesem Jahr vor?</div>
-              <input type="file" id="bw-file-add-${year}" style="display: none;" accept="image/*" onchange="loadLocalPhoto(event, ${year}, 'custom')">
-              <button type="button" class="chip-btn" style="border-color: rgba(255, 184, 0, 0.4); color: var(--primary); font-size: 0.75rem; padding: 4px 10px;" onclick="document.getElementById('bw-file-add-${year}').click()">
-                ➕ Foto für ${year} auswählen
-              </button>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; margin-bottom: 8px;">
+                ${isKonrad ? 'Als Administrator Konrad kannst du hier ein Foto für dieses Jahr hochladen:' : 'Für dieses Jahr wurde noch kein Gruppenbild hinterlegt.'}
+              </div>
+              ${isKonrad ? `
+                <input type="file" id="bw-file-add-${year}" style="display: none;" accept="image/*,.jpeg,.jpg,.png,.webp,.jepg" onchange="loadLocalPhoto(event, ${year}, 'custom')">
+                <button type="button" class="chip-btn" style="border-color: rgba(255, 184, 0, 0.4); color: var(--primary); font-size: 0.75rem; padding: 4px 10px;" onclick="document.getElementById('bw-file-add-${year}').click()">
+                  ➕ Foto für ${year} auswählen
+                </button>
+              ` : ''}
             </div>
           `;
         }
@@ -3675,24 +3761,30 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
           `;
         }
 
+        const isExpanded = bwExpandedYears.has(year);
+
         html += `
-          <div class="bw-year-card" id="bw-year-${year}">
-            <div class="bw-year-header">
+          <div class="bw-year-card ${isExpanded ? 'open' : ''}" id="bw-year-${year}">
+            <div class="bw-year-header" onclick="toggleBwYear(${year})" role="button" tabindex="0" title="Klicken, um ${year} Details auf- oder zuzuklappen">
               <div class="bw-year-title">
                 <span class="bw-year-badge">${year}</span>
                 <span class="bw-tour-num">${meta.number}. Bierwanderung</span>
+                <span class="bw-year-chevron">▼</span>
               </div>
               <div class="bw-stats-pills">
-                <span class="bw-stat-pill">🍺 ${totalBiere > 0 ? totalBiere + ' Biere gesamt' : 'Gründungsjahr'}</span>
-                <span class="bw-stat-pill">👥 ${participantsCount} Teilnehmer</span>
+                <span class="bw-stat-pill">🍺 ${totalBiere > 0 ? totalBiere + ' Biere' : 'Gründungsjahr'}</span>
+                <span class="bw-stat-pill">👥 ${participantsCount} Wanderer</span>
+                ${hasPhotos ? '<span class="bw-stat-pill" style="color: #fef08a; border-color: rgba(255,184,0,0.4);">📸 Foto</span>' : ''}
               </div>
             </div>
 
-            ${kingHtml}
-            ${photosHtml}
-            ${contextHtml}
-            ${noteHtml}
-            ${participantsHtml}
+            <div class="bw-year-body" id="bw-body-${year}" style="display: ${isExpanded ? 'block' : 'none'};">
+              ${kingHtml}
+              ${photosHtml}
+              ${contextHtml}
+              ${noteHtml}
+              ${participantsHtml}
+            </div>
           </div>
         `;
       });
@@ -3727,9 +3819,17 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
 
     function jumpToBwYear(year) {
       if (!year) return;
+      year = parseInt(year, 10);
       if (currentBwFilter !== 'all') {
         filterBwYear('all', document.querySelector('.bw-filter-pill'));
       }
+      // Ensure year is expanded
+      bwExpandedYears.add(year);
+      const card = document.getElementById(`bw-year-${year}`);
+      const body = document.getElementById(`bw-body-${year}`);
+      if (card) card.classList.add('open');
+      if (body) body.style.display = 'block';
+
       setTimeout(() => {
         const elem = document.getElementById(`bw-year-${year}`);
         if (elem) {
@@ -3739,7 +3839,7 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
           setTimeout(() => {
             elem.style.boxShadow = '';
             elem.style.borderColor = '';
-          }, 2000);
+          }, 2500);
         }
       }, 100);
     }
@@ -3788,6 +3888,7 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
       }
 
       const parent = imgElem.closest('.bw-photo-frame');
+      const isKonrad = isKonradLoggedIn();
       if (parent) {
         parent.onclick = null;
         parent.innerHTML = `
@@ -3796,24 +3897,34 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
             <div style="font-weight: 700; color: #fef08a; font-size: 0.9rem;">Gruppenbild ${year}</div>
             <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; line-height: 1.3;">${caption}</div>
             <div style="font-size: 0.72rem; color: #9ca3af; margin-top: 6px; font-family: monospace;">Dateiname: ${filename}</div>
-            <div style="margin-top: 10px;">
-              <input type="file" id="bw-fallback-file-${year}" style="display: none;" accept="image/*" onchange="loadLocalPhoto(event, ${year}, '${filename}')">
-              <button type="button" class="chip-btn" style="border-color: var(--primary); color: var(--primary); font-size: 0.75rem; padding: 4px 10px;" onclick="document.getElementById('bw-fallback-file-${year}').click()">
-                📁 Bild lokal auswählen
-              </button>
-            </div>
+            ${isKonrad ? `
+              <div style="margin-top: 10px;">
+                <input type="file" id="bw-fallback-file-${year}" style="display: none;" accept="image/*,.jpeg,.jpg,.png,.webp,.jepg" onchange="loadLocalPhoto(event, ${year}, '${filename}')">
+                <button type="button" class="chip-btn" style="border-color: var(--primary); color: var(--primary); font-size: 0.75rem; padding: 4px 10px;" onclick="document.getElementById('bw-fallback-file-${year}').click()">
+                  📁 Bild lokal auswählen
+                </button>
+              </div>
+            ` : ''}
           </div>
         `;
       }
     }
 
     function loadLocalPhoto(event, year, filename) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Fotos für die Bierwanderungen hochladen.');
+        return;
+      }
       const file = event.target.files[0];
       if (!file) return;
       processPhotoFile(file, year, filename);
     }
 
     function processPhotoFile(file, specifiedYear, specifiedFilename) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Gruppenbilder hochladen.');
+        return;
+      }
       const reader = new FileReader();
       reader.onload = function(e) {
         const dataUrl = e.target.result;
@@ -3821,7 +3932,7 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
         let targetFile = specifiedFilename;
 
         if (!targetYear) {
-          // Auto-detect year from filename (e.g., 2026.jpeg -> 2026)
+          // Auto-detect year from filename (e.g., 2024.jepg, 2024.jpeg, 2024.jpg -> 2024)
           const m = file.name.match(/(20\d\d)/);
           if (m) {
             targetYear = parseInt(m[1], 10);
@@ -3831,18 +3942,29 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
 
         if (targetYear && BIERWANDERUNGEN_META[targetYear]) {
           try {
-            // Store under year and filename
+            const meta = BIERWANDERUNGEN_META[targetYear];
+            // Store under year and actual filename
             localStorage.setItem(`bw_custom_img_${targetYear}_${targetFile || file.name}`, dataUrl);
+            // Also store under each meta photo filename for that year (e.g. 2024.jpg, 2024.jpeg, etc.)
+            if (meta.photos) {
+              meta.photos.forEach(p => {
+                localStorage.setItem(`bw_custom_img_${targetYear}_${p.file}`, dataUrl);
+              });
+            }
+            // Also store as general custom photo for the year
             localStorage.setItem(`bw_custom_img_${targetYear}_custom`, dataUrl);
-            // Also store by year directly as fallback
             localStorage.setItem(`bw_custom_img_${targetYear}`, dataUrl);
           } catch (err) {
             console.warn('LocalStorage Quota:', err);
           }
+          // Automatically expand the year so user sees the newly uploaded image immediately!
+          bwExpandedYears.add(targetYear);
         } else if (targetYear) {
           try {
             localStorage.setItem(`bw_custom_img_${targetYear}_custom`, dataUrl);
+            localStorage.setItem(`bw_custom_img_${targetYear}`, dataUrl);
           } catch (err) {}
+          bwExpandedYears.add(targetYear);
         }
         renderBierwanderungen(currentBwFilter);
       };
@@ -3850,12 +3972,17 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
     }
 
     function handleBatchPhotoUpload(event) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Gruppenbilder hochladen.');
+        return;
+      }
       const files = event.target.files;
       if (!files || !files.length) return;
       Array.from(files).forEach(f => processPhotoFile(f));
     }
 
     function handleBwDragOver(e) {
+      if (!isKonradLoggedIn()) return;
       e.preventDefault();
       const dropzone = document.getElementById('bw-dropzone');
       if (dropzone) dropzone.classList.add('dragover');
@@ -3868,6 +3995,10 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
     }
 
     function handleBwDrop(e) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Gruppenbilder hochladen.');
+        return;
+      }
       e.preventDefault();
       const dropzone = document.getElementById('bw-dropzone');
       if (dropzone) dropzone.classList.remove('dragover');
@@ -3877,6 +4008,10 @@ Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten he
     }
 
     function removeCustomPhoto(year) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Fotos entfernen oder zurücksetzen.');
+        return;
+      }
       try {
         localStorage.removeItem(`bw_custom_img_${year}_custom`);
         localStorage.removeItem(`bw_custom_img_${year}`);
