@@ -1,0 +1,4414 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bierwanderung 2027 • Countdown & Statistik</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #121316;
+      --surface: #1a1c21;
+      --surface-variant: #252830;
+      --card-bg: #20232b;
+      --primary: #ffb800;
+      --primary-variant: #d97706;
+      --primary-container: #3d2f0a;
+      --on-primary-container: #fef08a;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-green: #10b981;
+      --gold: #f59e0b;
+      --silver: #9ca3af;
+      --bronze: #b45309;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 84px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 640px;
+      padding: 16px 20px;
+    }
+
+    /* Top Bar */
+    header {
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 8px;
+    }
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+    .badge-live {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+
+    /* Tab Content Wrappers */
+    .tab-view {
+      display: none;
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+    .tab-view.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* COUNTDOWN SECTION */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin: 12px 0 16px;
+      box-shadow: 0 4px 12px rgba(255, 184, 0, 0.15);
+    }
+    .hero-heading {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .hero-sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .timer-grid-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .time-card-hero {
+      background: linear-gradient(145deg, #2b2311, #1e190b);
+      border: 1px solid rgba(255, 184, 0, 0.35);
+      border-radius: 22px;
+      padding: 24px 16px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .time-val-hero {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #fef08a;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .time-label-hero {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--primary);
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
+
+    .timer-grid-sub {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 80%;
+      margin: 0 auto 28px;
+    }
+    .time-card-sub {
+      background: var(--surface-variant);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .time-val-sub {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+    .time-label-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Quick Highlight Grid */
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 20px 0 12px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .action-card:hover {
+      background: #272a33;
+      transform: translateY(-2px);
+      border-color: rgba(255, 184, 0, 0.4);
+    }
+    .action-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--surface-variant);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .action-info {
+      flex: 1;
+    }
+    .action-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .action-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .action-chevron {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+    }
+
+    /* BIERKÖNIG & STATS */
+    .subtabs {
+      display: flex;
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+      gap: 4px;
+      border: 1px solid var(--border-color);
+    }
+    .subtab-btn {
+      flex: 1;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .subtab-btn.active {
+      background: var(--primary);
+      color: #1a1a1a;
+    }
+
+    .king-banner {
+      background: linear-gradient(145deg, #3d2f0a, #231b05);
+      border: 1px solid rgba(255, 184, 0, 0.4);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .king-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .king-name {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 4px 0;
+    }
+    .king-meta {
+      font-size: 0.85rem;
+      color: var(--on-primary-container);
+    }
+
+    .rank-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+      transition: background 0.15s;
+    }
+    .rank-badge {
+      font-size: 1.3rem;
+      font-weight: 800;
+      width: 34px;
+      text-align: center;
+    }
+    .rank-info {
+      flex: 1;
+    }
+    .rank-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .rank-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .beer-tag {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
+    /* REKORDE CARDS */
+    .record-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+    .record-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .record-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .record-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* WANDERER LIST VIEW */
+    .search-box {
+      width: 100%;
+      background: var(--surface-variant);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .search-box:focus {
+      border-color: var(--primary);
+    }
+    .wanderer-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .wanderer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .wanderer-name {
+      font-weight: 800;
+      font-size: 1rem;
+    }
+    .wanderer-pass {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .wanderer-history {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.85rem;
+    }
+    .wanderer-history.open {
+      display: block;
+    }
+    .history-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .history-chip {
+      background: var(--surface-variant);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+    }
+
+    /* BIER-KI CHAT VIEW */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 210px);
+      min-height: 480px;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .chat-bubble {
+      max-width: 88%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #121316;
+      font-weight: 600;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.bot {
+      align-self: flex-start;
+      background: var(--surface-variant);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 4px;
+    }
+    .quick-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 8px 0;
+      scrollbar-width: none;
+    }
+    .quick-chips::-webkit-scrollbar {
+      display: none;
+    }
+    .chip-btn {
+      background: var(--surface-variant);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .chip-btn:hover {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-color: var(--primary);
+    }
+    .chat-input-bar {
+      display: flex;
+      gap: 10px;
+      padding-top: 10px;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--surface-variant);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .chat-input:focus {
+      border-color: var(--primary);
+    }
+    .send-btn {
+      background: var(--primary);
+      color: #121316;
+      border: none;
+      border-radius: 14px;
+      padding: 0 20px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    /* BOTTOM NAVIGATION BAR */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: #181a1f;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 640px;
+      margin: 0 auto;
+      z-index: 100;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+    .nav-item .nav-icon {
+      font-size: 1.35rem;
+    }
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    /* ==========================================================
+       LOGIN & GREETING STYLES
+       ========================================================== */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 16, 20, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .login-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .login-card {
+      background: linear-gradient(160deg, #242732, #171920);
+      border: 1px solid rgba(255, 184, 0, 0.35);
+      border-radius: 24px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 24px rgba(255, 184, 0, 0.12);
+      text-align: center;
+      animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalPop {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .login-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 184, 0, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(255, 184, 0, 0.3);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+    .login-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .login-subtitle {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-input-wrap {
+      position: relative;
+    }
+    .form-input {
+      width: 100%;
+      background: #15171d;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px 16px;
+      color: #fff;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+    }
+    .toggle-pass-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 6px;
+    }
+    .login-error {
+      display: none;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-align: left;
+      line-height: 1.35;
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, #ffb800, #d97706);
+      color: #121316;
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 18px rgba(255, 184, 0, 0.3);
+    }
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(255, 184, 0, 0.4);
+    }
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    /* GREETING MODAL */
+    .greeting-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 16, 20, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .greeting-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .prompt-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 11, 14, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .prompt-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .prompt-card {
+      background: linear-gradient(155deg, #241e12, #161720);
+      border: 1px solid rgba(255, 184, 0, 0.45);
+      border-radius: 24px;
+      padding: 28px 22px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 184, 0, 0.15);
+      animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .greeting-card {
+      background: linear-gradient(155deg, #2a2512, #181921);
+      border: 1px solid rgba(255, 184, 0, 0.5);
+      border-radius: 26px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 184, 0, 0.2);
+      animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .greeting-icon {
+      font-size: 3.2rem;
+      margin-bottom: 12px;
+      animation: bounceIn 0.6s ease-out;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .greeting-hello {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fef08a;
+      margin-bottom: 6px;
+    }
+    .greeting-sub {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      margin-bottom: 20px;
+    }
+    .greeting-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .greeting-stat-box {
+      background: rgba(255, 184, 0, 0.1);
+      border: 1px solid rgba(255, 184, 0, 0.25);
+      border-radius: 14px;
+      padding: 12px 6px;
+    }
+    .greeting-stat-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .greeting-stat-lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .btn-enter-app {
+      background: linear-gradient(135deg, #ffb800, #f59e0b);
+      color: #121316;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 6px 18px rgba(255, 184, 0, 0.35);
+    }
+
+    /* USER BADGE IN HEADER */
+    .user-header-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1f222b;
+      border: 1px solid var(--border-color);
+      padding: 5px 10px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .btn-logout {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      padding: 2px 4px;
+      border-radius: 6px;
+      transition: color 0.15s;
+    }
+    .btn-logout:hover {
+      color: #ef4444;
+    }
+    .welcome-user-banner {
+      background: linear-gradient(145deg, #2b2311, #1a1b22);
+      border: 1px solid rgba(255, 184, 0, 0.3);
+      border-radius: 18px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .welcome-user-text {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fef08a;
+    }
+    .welcome-user-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* FEEDBACK / VERBESSERN BUTTON & KONRAD REVIEW PANEL */
+    .btn-improve {
+      background: rgba(255, 184, 0, 0.12);
+      border: 1px solid rgba(255, 184, 0, 0.35);
+      color: #fef08a;
+      border-radius: 14px;
+      padding: 0 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-improve:hover {
+      background: rgba(255, 184, 0, 0.25);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .bubble-improve-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(255, 184, 0, 0.12);
+      border: 1px solid rgba(255, 184, 0, 0.35);
+      border-radius: 9999px;
+      color: #fef08a;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .bubble-improve-btn:hover {
+      background: rgba(255, 184, 0, 0.28);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .bubble-improved-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(74, 222, 128, 0.15);
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      border-radius: 9999px;
+      color: #4ade80;
+    }
+    .konrad-badge-btn {
+      background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(245, 158, 11, 0.12));
+      border: 1px solid rgba(255, 184, 0, 0.45);
+      color: #fef08a;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .konrad-badge-btn:hover {
+      background: rgba(255, 184, 0, 0.3);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* ==========================================================
+       BIERWANDERUNGEN CHRONIK (2005 - 2026) STYLES
+       ========================================================== */
+    @media (max-width: 480px) {
+      .bottom-nav {
+        height: 68px;
+      }
+      .nav-item {
+        padding: 4px 2px;
+        font-size: 0.63rem;
+        gap: 2px;
+      }
+      .nav-item .nav-icon {
+        font-size: 1.15rem;
+      }
+    }
+    .bw-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 6px 0 10px 0;
+      margin-bottom: 12px;
+      scrollbar-width: none;
+    }
+    .bw-filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .bw-filter-pill {
+      background: var(--surface-variant);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: 9999px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .bw-filter-pill.active {
+      background: rgba(255, 184, 0, 0.2);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .bw-import-box {
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.12), rgba(32, 35, 43, 0.9));
+      border: 1px dashed rgba(255, 184, 0, 0.45);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.2s ease;
+    }
+    .bw-import-box.dragover {
+      background: rgba(255, 184, 0, 0.22);
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(255, 184, 0, 0.35);
+    }
+    .bw-jump-select {
+      background: var(--surface-variant);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 9999px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+    .bw-year-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 0;
+      margin-bottom: 12px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+    .bw-year-card:hover {
+      border-color: rgba(255, 184, 0, 0.4);
+    }
+    .bw-year-card.open {
+      border-color: rgba(255, 184, 0, 0.55);
+      box-shadow: 0 8px 24px rgba(255, 184, 0, 0.12), 0 4px 18px rgba(0,0,0,0.35);
+    }
+    .bw-year-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 16px 18px;
+      cursor: pointer;
+      user-select: none;
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .bw-year-header:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .bw-year-card.open .bw-year-header {
+      background: rgba(255, 184, 0, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .bw-year-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bw-year-badge {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+    .bw-year-card.open .bw-year-badge {
+      color: var(--primary);
+    }
+    .bw-year-chevron {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-left: 6px;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: bold;
+    }
+    .bw-year-card.open .bw-year-chevron {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+    .bw-year-body {
+      padding: 18px;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+    .bw-tour-num {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: rgba(255, 184, 0, 0.12);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 184, 0, 0.25);
+    }
+    .bw-stats-pills {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .bw-stat-pill {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--surface-variant);
+      color: #e5e7eb;
+      padding: 3px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    .bw-king-card {
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.18), rgba(217, 119, 6, 0.08));
+      border: 1px solid rgba(255, 184, 0, 0.4);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bw-king-icon {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .bw-king-text {
+      flex: 1;
+    }
+    .bw-king-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--primary);
+      letter-spacing: 0.05em;
+    }
+    .bw-king-name {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .bw-photos-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    @media (min-width: 520px) {
+      .bw-photos-grid.two-cols {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .bw-photos-grid.multi-cols {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    @media (max-width: 480px) {
+      .bw-photos-grid.multi-cols {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .bw-photos-grid.multi-cols .bw-photo-caption {
+        font-size: 0.7rem;
+        padding: 6px 8px;
+      }
+    }
+    .bw-photo-card.hero-photo {
+      border: 1px solid rgba(255, 184, 0, 0.45);
+      box-shadow: 0 6px 22px rgba(255, 184, 0, 0.18);
+    }
+    @media (min-width: 640px) {
+      .bw-photos-grid.multi-cols .bw-photo-card.hero-photo {
+        grid-column: 1 / -1;
+      }
+      .bw-photos-grid.multi-cols .bw-photo-card.hero-photo .bw-img {
+        max-height: 440px;
+      }
+    }
+    .bw-photo-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(255, 184, 0, 0.6);
+      color: #fef08a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      backdrop-filter: blur(4px);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .bw-photo-card {
+      border-radius: 14px;
+      overflow: hidden;
+      background: #171920;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+    .bw-photo-frame {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      background: #0f1014;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
+      max-height: 380px;
+    }
+    .bw-photo-frame:hover .bw-photo-overlay {
+      opacity: 1;
+    }
+    .bw-img {
+      width: 100%;
+      height: auto;
+      max-height: 380px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .bw-photo-frame:hover .bw-img {
+      transform: scale(1.02);
+    }
+    .bw-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      gap: 6px;
+    }
+    .bw-photo-caption {
+      padding: 9px 12px;
+      font-size: 0.78rem;
+      color: #e5e7eb;
+      background: rgba(24, 26, 32, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      line-height: 1.35;
+    }
+    .bw-img-fallback {
+      padding: 24px 16px;
+      text-align: center;
+      width: 100%;
+    }
+    .bw-folder-box {
+      background: rgba(255, 184, 0, 0.05);
+      border: 1px solid rgba(255, 184, 0, 0.25);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 10px;
+    }
+    .bw-folder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .bw-folder-card {
+      background: rgba(24, 26, 32, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .bw-folder-card:hover {
+      border-color: var(--primary);
+      background: rgba(255, 184, 0, 0.1);
+      transform: translateY(-2px);
+    }
+    .bw-folder-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(255, 184, 0, 0.2);
+      color: var(--primary);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .bw-no-photo-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      padding: 18px 14px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .bw-context-info {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .bw-participants-toggle {
+      width: 100%;
+      background: var(--surface-variant);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .bw-participants-toggle:hover {
+      background: rgba(255, 184, 0, 0.1);
+      border-color: rgba(255, 184, 0, 0.3);
+    }
+    .bw-participants-list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bw-participant-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .bw-participant-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(255, 184, 0, 0.08);
+      z-index: 0;
+    }
+    .bw-participant-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1;
+    }
+    .bw-rank-icon {
+      font-size: 0.95rem;
+      width: 22px;
+      text-align: center;
+    }
+    .bw-participant-name {
+      font-weight: 700;
+      color: #fff;
+    }
+    .bw-participant-beers {
+      font-weight: 700;
+      color: var(--primary);
+      z-index: 1;
+    }
+    .bw-highlight-banner {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: #fef08a;
+      background: rgba(255, 184, 0, 0.08);
+      border: 1px solid rgba(255, 184, 0, 0.2);
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    /* LIGHTBOX */
+    .bw-lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .bw-lightbox-overlay.active {
+      display: flex;
+      animation: modalPop 0.25s ease-out;
+    }
+    .bw-lightbox-dialog {
+      position: relative;
+      max-width: 96vw;
+      max-height: 94vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .bw-lightbox-dialog img {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+      object-fit: contain;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      user-select: none;
+    }
+    .bw-lightbox-close-btn {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      background: #181a1f;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      z-index: 10002;
+      transition: all 0.2s;
+    }
+    .bw-lightbox-close-btn:hover {
+      background: #ef4444;
+      border-color: #ef4444;
+    }
+    .bw-lightbox-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(15, 23, 42, 0.85);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 26px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10001;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(6px);
+      user-select: none;
+    }
+    .bw-lightbox-nav-btn:hover {
+      background: var(--primary);
+      color: #111827;
+      border-color: var(--primary);
+      transform: translateY(-50%) scale(1.08);
+    }
+    .bw-lightbox-nav-btn.prev {
+      left: -22px;
+    }
+    .bw-lightbox-nav-btn.next {
+      right: -22px;
+    }
+    @media (max-width: 600px) {
+      .bw-lightbox-nav-btn.prev { left: 8px; }
+      .bw-lightbox-nav-btn.next { right: 8px; }
+    }
+    .bw-lightbox-caption-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 720px;
+      margin-top: 10px;
+      gap: 12px;
+    }
+    .bw-lightbox-caption {
+      color: #f3f4f6;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: left;
+      flex: 1;
+      line-height: 1.35;
+    }
+    .bw-lightbox-counter {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fef08a;
+      background: rgba(255, 184, 0, 0.14);
+      border: 1px solid rgba(255, 184, 0, 0.35);
+      padding: 3px 9px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN MODAL / GATE -->
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-card">
+      <div class="login-badge">
+        <span>🔒</span> Einlasskontrolle
+      </div>
+      <h1 class="login-title">Wanderer-Login</h1>
+      <p class="login-subtitle">
+        Bitte melde dich mit deinem Wanderer-Namen und deiner Ausweisnummer als Passwort an.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label" for="login-name">Benutzername</label>
+        <div class="form-input-wrap">
+          <input type="text" id="login-name" class="form-input" placeholder="Wanderer-Name eingeben" autocomplete="off" onkeypress="if(event.key==='Enter') focusPassword()" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="login-pass">Passwort</label>
+        <div class="form-input-wrap">
+          <input type="password" id="login-pass" class="form-input" placeholder="Ausweisnummer eingeben" autocomplete="off" onkeypress="if(event.key==='Enter') handleLoginSubmit()" />
+          <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility()" title="Passwort anzeigen/verbergen">👁️</button>
+        </div>
+      </div>
+
+      <div id="login-error" class="login-error"></div>
+
+      <button type="button" id="btn-login" class="btn-login" onclick="handleLoginSubmit()">
+        <span>Anmelden & Eintreten</span> 🍻
+      </button>
+    </div>
+  </div>
+
+  <!-- WELCOME / GREETING POPUP -->
+  <div id="greeting-overlay" class="greeting-overlay hidden">
+    <div class="greeting-card">
+      <div class="greeting-icon">🍻</div>
+      <h2 id="greeting-name" class="greeting-hello">Willkommen!</h2>
+      <p id="greeting-sub" class="greeting-sub">Ausweisnummer verifiziert. Prost auf die Bierwanderung!</p>
+
+      <div class="greeting-stats-grid">
+        <div class="greeting-stat-box">
+          <div id="greeting-stat-beers" class="greeting-stat-val">0</div>
+          <div class="greeting-stat-lbl">Biere gesamt</div>
+        </div>
+        <div class="greeting-stat-box">
+          <div id="greeting-stat-hikes" class="greeting-stat-val">0</div>
+          <div class="greeting-stat-lbl">Wanderungen</div>
+        </div>
+        <div class="greeting-stat-box">
+          <div id="greeting-stat-record" class="greeting-stat-val">0</div>
+          <div class="greeting-stat-lbl">Jahresrekord</div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-enter-app" onclick="closeGreetingModal()">
+        Weiter zur Bierwanderung 🥾
+      </button>
+    </div>
+  </div>
+
+  <!-- BIER-KI ERSTE BENUTZUNG PROMPTFENSTER -->
+  <div id="ai-prompt-modal" class="prompt-overlay hidden">
+    <div class="prompt-card">
+      <div style="font-size: 2.8rem; margin-bottom: 10px;">🤖🍻</div>
+      <h3 style="font-size: 1.4rem; font-weight: 800; color: #fef08a; margin-bottom: 6px;">Bier-KI Assistent</h3>
+      <p style="font-size: 0.88rem; color: var(--text-main); margin-bottom: 16px; line-height: 1.4;">
+        Willkommen bei der Bier-KI! Stelle direkt deine erste Frage oder wähle eine Beispielfrage aus:
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; text-align: left;">
+        <button class="chip-btn" style="text-align: left; padding: 10px 14px; border-radius: 10px;" onclick="selectIntroPrompt('Wer hat die meisten Bierkönig Titel?')">
+          👑 Wer hat die meisten Bierkönig-Titel?
+        </button>
+        <button class="chip-btn" style="text-align: left; padding: 10px 14px; border-radius: 10px;" onclick="selectIntroPrompt('Wer ist der königliche Schluckspecht?')">
+          🦅 Wer ist der königliche Schluckspecht?
+        </button>
+        <button class="chip-btn" style="text-align: left; padding: 10px 14px; border-radius: 10px;" onclick="selectIntroPrompt('Wer war Bierkönig 2026?')">
+          🍺 Wer war Bierkönig 2026?
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="intro-prompt-input" class="chat-input" style="flex: 1; border-radius: 12px; font-size: 0.9rem;" placeholder="Eigene Frage eingeben..." onkeypress="if(event.key==='Enter') submitIntroPrompt()" />
+        <button class="btn-primary" style="padding: 10px 16px; border-radius: 12px; font-weight: 700; white-space: nowrap;" onclick="submitIntroPrompt()">Fragen ➤</button>
+      </div>
+      <button type="button" style="background:none; border:none; color:var(--text-muted); font-size:0.8rem; margin-top:12px; cursor:pointer;" onclick="closeIntroPromptModal()">Erstmal nur umschauen</button>
+    </div>
+  </div>
+
+  <!-- FEEDBACK / VERBESSERN MODAL -->
+  <div id="improve-modal" class="prompt-overlay hidden">
+    <div class="prompt-card" style="max-width: 500px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: #fef08a; display: flex; align-items: center; gap: 8px;">
+          <span>✏️</span> Antwort verbessern
+        </h3>
+        <span style="font-size: 0.85rem; color: #a1a1aa; cursor: pointer;" onclick="closeImproveModal()">✕ Schließen</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+        Hat die Bier-KI deine Frage nicht oder falsch beantwortet? Gib hier die Frage und den Hinweis oder die richtige Antwort ein. Die Rückmeldung wird gespeichert und von Konrad geprüft.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label" for="improve-question">Gestellte Frage:</label>
+        <textarea id="improve-question" class="chat-input" rows="2" style="width: 100%; border-radius: 12px; font-size: 0.88rem; resize: vertical;" placeholder="Welche Frage wurde gestellt?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="improve-ai-answer">Antwort der Bier-KI (oder bisherige Antwort):</label>
+        <textarea id="improve-ai-answer" class="chat-input" rows="3" style="width: 100%; border-radius: 12px; font-size: 0.85rem; resize: vertical; color: #d4d4d8;" placeholder="Was hat die KI fälschlicherweise oder unvollständig geantwortet?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="improve-user-correction">Deine Verbesserung / Richtige Antwort / Hinweis (optional):</label>
+        <textarea id="improve-user-correction" class="chat-input" rows="3" style="width: 100%; border-radius: 12px; font-size: 0.88rem; resize: vertical; border-color: rgba(255, 184, 0, 0.4);" placeholder="Wie lautet die richtige Antwort oder was sollte ergänzt werden?"></textarea>
+      </div>
+
+      <div id="improve-msg" style="display: none; padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; margin-bottom: 12px;"></div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
+        <button type="button" class="chip-btn" onclick="closeImproveModal()">Abbrechen</button>
+        <button type="button" class="btn-primary" style="padding: 10px 20px; border-radius: 12px; font-weight: 700;" onclick="saveImprovement()">💾 Speichern & Einreichen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUR FÜR KONRAD: EINGEREICHTE VERBESSERUNGEN & LOGIN-LOG MODAL -->
+  <div id="konrad-modal" class="prompt-overlay hidden">
+    <div class="prompt-card" style="max-width: 600px; text-align: left; max-height: 88vh; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: #fef08a; display: flex; align-items: center; gap: 8px;">
+          <span>🛡️</span> Konrads Administrationsbereich
+        </h3>
+        <span style="font-size: 0.85rem; color: #a1a1aa; cursor: pointer;" onclick="closeKonradModal()">✕ Schließen</span>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+        🔒 Exklusiver Bereich für Konrad: Wer hat sich eingeloggt und welche KI-Antworten wurden zur Korrektur gemeldet?
+      </p>
+
+      <!-- Tabs im Konrad Modal -->
+      <div style="display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+        <button type="button" id="konrad-tab-btn-logins" class="chip-btn" style="border-color: var(--primary); background: rgba(255,184,0,0.2); color: #fff; font-weight: 700; font-size: 0.82rem;" onclick="switchKonradTab('logins')">
+          👥 Eingeloggte Bierwanderer (<span id="konrad-tab-logins-count">0</span>)
+        </button>
+        <button type="button" id="konrad-tab-btn-feedback" class="chip-btn" style="border-color: var(--border-color); color: var(--text-muted); font-size: 0.82rem;" onclick="switchKonradTab('feedback')">
+          ✏️ KI-Feedback (<span id="konrad-tab-feedback-count">0</span>)
+        </button>
+      </div>
+
+      <!-- Tab 1: Eingeloggte Bierwanderer (Nur Name & Login-Zeit) -->
+      <div id="konrad-view-logins" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+        <div id="konrad-logins-summary" style="margin-bottom: 10px; padding: 8px 12px; background: rgba(255,184,0,0.08); border: 1px solid rgba(255,184,0,0.25); border-radius: 10px; font-size: 0.78rem; color: #fef08a;">
+          <!-- Dynamische Zusammenfassung -->
+        </div>
+        <div id="konrad-logins-list" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; margin-bottom: 14px; max-height: 48vh;">
+          <!-- Dynamisch befüllt -->
+        </div>
+      </div>
+
+      <!-- Tab 2: KI-Feedback & Verbesserungen -->
+      <div id="konrad-view-feedback" style="display: none; flex-direction: column; flex: 1; min-height: 0;">
+        <div id="konrad-items-list" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; margin-bottom: 14px; max-height: 48vh;">
+          <!-- Dynamisch befüllt -->
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; pt: 10px; border-top: 1px solid var(--border-color);">
+        <span id="konrad-item-count" style="font-size: 0.78rem; color: var(--text-muted);">0 Einträge</span>
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <button type="button" class="chip-btn" style="color: #fbbf24; border-color: rgba(251, 191, 36, 0.4); font-size: 0.78rem; font-weight: 700;" onclick="downloadCurrentApk()" title="Android APK der Bierwanderung herunterladen">📱 APK downloaden</button>
+          <button type="button" class="chip-btn" style="color: #86efac; border-color: rgba(74, 222, 128, 0.4); font-size: 0.78rem;" onclick="downloadCurrentSql()" title="Aktuelle BW.sql Datei herunterladen">💾 BW.sql downloaden</button>
+          <button type="button" id="konrad-btn-clear" class="chip-btn" style="color: #f87171; border-color: rgba(239, 68, 68, 0.4); font-size: 0.78rem;" onclick="handleKonradClearCurrentTab()">🗑️ Logins leeren</button>
+          <button type="button" class="btn-primary" style="padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem;" onclick="closeKonradModal()">Fertig</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Brand Header -->
+  <header>
+    <div class="brand-title">
+      <span>🍺</span> Bierwanderung
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <!-- Konrad Exklusiver Badge im Header (nur wenn Konrad angemeldet ist) -->
+      <button id="konrad-header-badge" class="konrad-badge-btn" style="display: none;" onclick="openKonradModal()" title="Eingereichte KI-Verbesserungen einsehen">
+        <span>🛡️</span> Konrad <span id="konrad-badge-count" style="background: var(--primary); color: #121316; font-size: 0.68rem; font-weight: 900; padding: 1px 6px; border-radius: 9999px;">0</span>
+      </button>
+
+      <div id="user-header-info" class="user-header-badge" style="display: none;">
+        <span>👤</span>
+        <span id="user-display-name">Gast</span>
+        <button type="button" class="btn-logout" onclick="handleLogout()" title="Abmelden">🚪</button>
+      </div>
+      <div class="badge-live">
+        <div class="pulse-dot"></div>
+        BW.sql Aktiv
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+
+    <!-- 1. COUNTDOWN TAB -->
+    <div id="tab-countdown" class="tab-view active">
+      <!-- Personalized Welcome Banner -->
+      <div id="welcome-user-banner" class="welcome-user-banner" style="display: none;">
+        <div>
+          <div id="welcome-banner-title" class="welcome-user-text">Grüß dich, Wanderer! 🍻</div>
+          <div id="welcome-banner-sub" class="welcome-user-sub">Ausweis verifiziert • Bereit für 2027</div>
+        </div>
+        <span style="font-size: 1.5rem;">🥾</span>
+      </div>
+
+      <div style="text-align: center;">
+        <div class="hero-badge">
+          <span>🍻</span> Nächste Bierwanderung am 13.09.2027
+        </div>
+        <h1 class="hero-heading">Countdown läuft!</h1>
+        <p class="hero-sub">Zieltermin: 13. September 2027, 10:00 Uhr</p>
+
+        <!-- Prominente Tage & Stunden -->
+        <div class="timer-grid-hero">
+          <div class="time-card-hero">
+            <div id="cnt-days" class="time-val-hero">--</div>
+            <div class="time-label-hero">TAGE</div>
+          </div>
+          <div class="time-card-hero">
+            <div id="cnt-hours" class="time-val-hero">--</div>
+            <div class="time-label-hero">STUNDEN</div>
+          </div>
+        </div>
+
+        <!-- Minuten & Sekunden -->
+        <div class="timer-grid-sub">
+          <div class="time-card-sub">
+            <span id="cnt-minutes" class="time-val-sub">--</span>
+            <span class="time-label-sub">Minuten</span>
+          </div>
+          <div class="time-card-sub">
+            <span id="cnt-seconds" class="time-val-sub">--</span>
+            <span class="time-label-sub">Sekunden</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Cards -->
+      <div class="section-title">Bereiche der App</div>
+
+      <div class="action-card" onclick="switchTab('tab-king')">
+        <div class="action-icon">👑</div>
+        <div class="action-info">
+          <div class="action-title">Bierkönige & Schluckspecht</div>
+          <div class="action-desc">Jahressieger (Bierkönig) & Ewige Bestenliste (Königlicher Schluckspecht)</div>
+        </div>
+        <div class="action-chevron">›</div>
+      </div>
+
+      <div class="action-card" onclick="switchTab('tab-bierwanderungen')" style="background: linear-gradient(135deg, rgba(255, 184, 0, 0.16), rgba(32, 35, 43, 0.95)); border: 1px solid rgba(255, 184, 0, 0.4);">
+        <div class="action-icon">🥾</div>
+        <div class="action-info">
+          <div class="action-title" style="color: var(--primary);">🥾 Bierwanderungen (2005 – 2026)</div>
+          <div class="action-desc">Alle 22 Jahre: Gruppenbilder, Bierkönige & Teilnehmer</div>
+        </div>
+        <div class="action-chevron">›</div>
+      </div>
+
+      <div class="action-card" onclick="switchTab('tab-ai')">
+        <div class="action-icon">🤖</div>
+        <div class="action-info">
+          <div class="action-title">Bier-KI-Assistent</div>
+          <div class="action-desc">Direkte Antworten zu allen Rekorden und Wanderern</div>
+        </div>
+        <div class="action-chevron">›</div>
+      </div>
+
+      <div class="action-card" onclick="switchTab('tab-wanderer')">
+        <div class="action-icon">📋</div>
+        <div class="action-info">
+          <div class="action-title">Alle 33 Wanderer</div>
+          <div class="action-desc">Teilnehmer, Ausweise und Bier-Historie</div>
+        </div>
+        <div class="action-chevron">›</div>
+      </div>
+
+      <div class="section-title">Schnell-Highlights</div>
+      <div class="record-card">
+        <div class="record-tag">👑 Bierkönig 2026 (Jahressieger)</div>
+        <div class="record-title" id="hl-2026-winner">Clemens (16 Biere)</div>
+        <div class="record-desc">Bierkönig der Bierwanderung 2026. Mirko belegte Platz 2 mit 15 Bieren.</div>
+      </div>
+    </div>
+
+    <!-- 1.5 BIERWANDERUNGEN CHRONIK TAB (2005 - 2026) -->
+    <div id="tab-bierwanderungen" class="tab-view">
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.35rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+              🥾 Bierwanderungen Chronik
+            </h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+              2005 – 2026 • 22 Jahre Tradition • Gruppenbilder, Bierkönige & Teilnehmer
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Filter / Year Picker -->
+        <div class="bw-filter-bar">
+          <button type="button" class="bw-filter-pill active" onclick="filterBwYear('all', this)">Alle (22)</button>
+          <button type="button" class="bw-filter-pill" onclick="filterBwYear('photos', this)">📸 Mit Foto (15)</button>
+          <button type="button" class="bw-filter-pill" onclick="filterBwYear('founders', this)">🏛️ Gründungsjahre (2)</button>
+          <button type="button" class="bw-filter-pill" onclick="expandAllBwYears()" title="Alle Jahre aufklappen">📂 Alle aufklappen</button>
+          <button type="button" class="bw-filter-pill" onclick="collapseAllBwYears()" title="Alle Jahre zuklappen">📁 Alle zuklappen</button>
+          <div style="display: inline-flex; align-items: center; margin-left: 4px;">
+            <select id="bw-year-jump" class="bw-jump-select" onchange="jumpToBwYear(this.value)">
+              <option value="">Jahr auswählen & öffnen...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Gruppenbilder Upload Bar & GitHub Ordner (Nur für Konrad sichtbar) -->
+        <div class="bw-import-box" id="bw-dropzone" style="display: none; flex-direction: column; align-items: stretch; gap: 12px;"
+             ondragover="handleBwDragOver(event)" 
+             ondragleave="handleBwDragLeave(event)" 
+             ondrop="handleBwDrop(event)">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="font-size: 1.8rem;">🖼️</div>
+              <div>
+                <div style="font-weight: 700; color: #fef08a; font-size: 0.88rem;">Gruppenbilder & GitHub-Ordner verwalten (Admin: Konrad)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">
+                  Fotos (z. B. 2006.jpg, 2024.jpg, 2025.jpg, 2026.jpeg...) hochladen und direkt im Browser speichern.
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="file" id="bw-batch-files-input" multiple accept="image/*,.jpeg,.jpg,.png,.webp,.jepg" style="display: none;" onchange="handleBatchPhotoUpload(event)">
+              <button type="button" class="btn-primary" style="padding: 7px 14px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px;" onclick="document.getElementById('bw-batch-files-input').click()">
+                <span>📂</span> Fotos auswählen / hochladen
+              </button>
+            </div>
+          </div>
+          <!-- Schnellzugriff auf die Bilder-Ordner (2006, 2007, 2009, 2011) -->
+          <div style="background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.06);">
+            <div style="font-size: 0.75rem; font-weight: 700; color: #fef08a; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+              <span>📁</span> GitHub-Ordner für Upload & Speichern:
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="chip-btn" style="border-color: rgba(255,184,0,0.5); color: #fef08a; font-size: 0.74rem; padding: 4px 10px;" onclick="openKonradFolder(2006)">
+                📂 images/2006/ ↗
+              </button>
+              <button type="button" class="chip-btn" style="border-color: rgba(255,184,0,0.5); color: #fef08a; font-size: 0.74rem; padding: 4px 10px;" onclick="openKonradFolder(2007)">
+                📂 images/2007/ ↗
+              </button>
+              <button type="button" class="chip-btn" style="border-color: rgba(255,184,0,0.5); color: #fef08a; font-size: 0.74rem; padding: 4px 10px;" onclick="openKonradFolder(2009)">
+                📂 images/2009/ ↗
+              </button>
+              <button type="button" class="chip-btn" style="border-color: rgba(255,184,0,0.5); color: #fef08a; font-size: 0.74rem; padding: 4px 10px;" onclick="openKonradFolder(2011)">
+                📂 images/2011/ ↗
+              </button>
+              <button type="button" class="chip-btn" style="border-color: rgba(96,165,250,0.5); color: #93c5fd; font-size: 0.74rem; padding: 4px 10px;" onclick="openKonradFolder(2024)">
+                📂 images/2024/ ↗
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Container where year cards are rendered dynamically -->
+      <div id="bw-years-container"></div>
+    </div>
+
+    <!-- 2. BIERKÖNIG & STATS TAB -->
+    <div id="tab-king" class="tab-view">
+      <div class="subtabs">
+        <button class="subtab-btn active" onclick="switchSubtab('ewige')">Schluckspecht</button>
+        <button class="subtab-btn" onclick="switchSubtab('2026')">Bierkönig 2026</button>
+        <button class="subtab-btn" onclick="switchSubtab('rekorde')">Rekorde</button>
+      </div>
+
+      <!-- Ewige Liste -->
+      <div id="subtab-ewige">
+        <div class="king-banner">
+          <div class="king-badge">🦅 Königlicher Schluckspecht</div>
+          <div class="king-name" id="eternal-king-name">Mirko</div>
+          <div class="king-meta" id="eternal-king-stats">247 Biere gesamt • 16 Wanderungen</div>
+        </div>
+        <div id="ewige-list-container"></div>
+      </div>
+
+      <!-- Jahr 2026 -->
+      <div id="subtab-2026" style="display: none;">
+        <div class="king-banner">
+          <div class="king-badge">👑 Bierkönig 2026</div>
+          <div class="king-name" id="winner-2026-name">Clemens</div>
+          <div class="king-meta">16 Biere getrunken (Meiste Biere 2026)</div>
+        </div>
+        <div id="year-2026-list-container"></div>
+      </div>
+
+      <!-- Rekorde -->
+      <div id="subtab-rekorde" style="display: none;">
+        <div class="record-card">
+          <div class="record-tag">🔥 Allzeit-Jahresrekord</div>
+          <div class="record-title" id="rec-single-hero">Manni</div>
+          <div class="record-desc">24 Biere in einem einzigen Jahr (2019 & 2025)</div>
+        </div>
+        <div class="record-card">
+          <div class="record-tag">🦅 Königlicher Schluckspecht (Gesamtsieger)</div>
+          <div class="record-title" id="rec-eternal-hero">Mirko</div>
+          <div class="record-desc">247 Biere gesamt aus 16 Wanderungen</div>
+        </div>
+        <div class="record-card">
+          <div class="record-tag">🥾 Die meisten Wanderungen</div>
+          <div class="record-title" id="rec-most-hikes-name">Frank</div>
+          <div class="record-desc" id="rec-most-hikes-desc">22 Teilnahmen • 239 getrunkene Biere</div>
+        </div>
+        <div class="record-card">
+          <div class="record-tag">🏮 Die Rote Laterne</div>
+          <div class="record-title">Wenigste Biere in einem Jahr</div>
+          <div class="record-desc">Konrad mit 1 Bier (2018) • 2026: Konrad (3 Biere) • 2025: Konrad (4 Biere)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. BIER-KI ASSISTENT TAB -->
+    <div id="tab-ai" class="tab-view">
+      <div style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+        <div>
+          <h2 style="font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+            🤖 Bier-KI & Qwen-Coder
+            <span id="model-indicator-badge" style="font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 9999px; background: rgba(255, 184, 0, 0.15); color: var(--primary); border: 1px solid rgba(255, 184, 0, 0.3);">Qwen 2.5 Engine</span>
+          </h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Fragen an die Datenbank & SQL-Analyse mit Qwen2.5-Coder</p>
+        </div>
+        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+          <button id="konrad-ai-tab-badge" class="konrad-badge-btn" style="display: none;" onclick="openKonradModal()" title="Eingereichte KI-Verbesserungen einsehen">
+            🛡️ Konrad-Panel (<span id="konrad-ai-count">0</span>)
+          </button>
+          <button class="chip-btn" style="border-color: var(--primary); font-size: 0.75rem; padding: 4px 10px;" onclick="toggleQwenSettings()">
+            ⚙️ Qwen-Modell Config
+          </button>
+        </div>
+      </div>
+
+      <!-- QWEN 2.5 CODER CONFIG CARD -->
+      <div id="qwen-settings-card" class="card" style="display: none; margin-bottom: 12px; background: rgba(30, 33, 43, 0.95); border: 1px solid rgba(255, 184, 0, 0.4); padding: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <strong style="color: #fef08a; font-size: 0.92rem;">🧠 Qwen2.5-Coder-7B-Instruct Anbindung</strong>
+          <span style="font-size: 0.75rem; color: #a1a1aa; cursor: pointer;" onclick="toggleQwenSettings()">✕ Schließen</span>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4;">
+          Wähle, wie Qwen2.5-Coder-7B-Instruct die SQL-Datenbank abfragt:
+        </p>
+
+        <div style="margin-bottom: 8px;">
+          <label style="font-size: 0.78rem; color: var(--text-main); font-weight: 600;">Modus:</label>
+          <select id="qwen-mode-select" class="chat-input" style="padding: 6px 10px; font-size: 0.82rem; margin-top: 4px; width: 100%;" onchange="handleQwenModeChange()">
+            <option value="hybrid">⚡ Intelligenter Hybrid-Modus (Qwen-Logik & Echtzeit-SQL direkt im Browser)</option>
+            <option value="openrouter">🌐 OpenRouter API (Live Qwen2.5-Coder-7B-Instruct Cloud)</option>
+            <option value="ollama">💻 Lokales Ollama (http://localhost:11434/api/generate)</option>
+          </select>
+        </div>
+
+        <div id="qwen-api-key-group" style="display: none; margin-bottom: 8px;">
+          <label style="font-size: 0.78rem; color: var(--text-main); font-weight: 600;">OpenRouter API Key (optional für externe Cloud-GPU):</label>
+          <input type="password" id="qwen-api-key" class="chat-input" style="padding: 6px 10px; font-size: 0.82rem; margin-top: 4px; width: 100%;" placeholder="sk-or-v1-..." />
+          <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Schlüssel wird nur lokal im Browser gespeichert.</p>
+        </div>
+
+        <div id="qwen-ollama-url-group" style="display: none; margin-bottom: 8px;">
+          <label style="font-size: 0.78rem; color: var(--text-main); font-weight: 600;">Ollama Host URL (Standard: http://localhost:11434):</label>
+          <input type="text" id="qwen-ollama-url" class="chat-input" style="padding: 6px 10px; font-size: 0.82rem; margin-top: 4px; width: 100%;" value="http://localhost:11434" />
+        </div>
+
+        <button class="btn-primary" style="padding: 6px 14px; font-size: 0.8rem; border-radius: 8px; width: 100%; font-weight: 700;" onclick="saveQwenSettings()">
+          Einstellungen speichern
+        </button>
+      </div>
+
+      <div class="quick-chips">
+        <button class="chip-btn" onclick="sendPrompt('Wie hoch ist die Gesamtbieranzahl bei allen Wanderungen?')">🍺 Gesamtbieranzahl</button>
+        <button class="chip-btn" onclick="sendPrompt('In welchem Jahr wurden die meisten Biere getrunken?')">🔥 Rekordjahr</button>
+        <button class="chip-btn" onclick="sendPrompt('In welchem Jahr gab es die meisten Teilnehmer?')">👥 Meiste Teilnehmer</button>
+        <button class="chip-btn" onclick="sendPrompt('Wer bekam die Rote Laterne?')">🏮 Rote Laterne</button>
+        <button class="chip-btn" onclick="sendPrompt('Wieviel Bier hat Andre im Durchschnitt bei seinen Teilnahmen getrunken?')">📊 Schnitt Andre</button>
+        <button class="chip-btn" onclick="sendPrompt('Wer ist Bierkönig 2026?')">Bierkönig 2026</button>
+        <button class="chip-btn" onclick="sendPrompt('Wer hat die meisten Bierkönig Titel?')">Meiste Bierkönig-Titel</button>
+        <button class="chip-btn" onclick="sendPrompt('Wer ist der königliche Schluckspecht?')">Königlicher Schluckspecht</button>
+        <button class="chip-btn" onclick="sendPrompt('Was ist der Allzeit-Rekord?')">Allzeit-Einzelrekord</button>
+        <button class="chip-btn" onclick="sendPrompt('Wer hat die meisten Wanderungen?')">Meiste Wanderungen</button>
+        <button class="chip-btn" onclick="sendPrompt('Statistik zu Manni')">Statistik Manni</button>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-messages" id="chat-box">
+          <div class="chat-bubble bot">
+            <div>Hallo! Ich bin dein Bier-KI-Assistent. Frag mich gerne nach den Bierkönigen der einzelnen Jahre, dem königlichen Schluckspecht oder persönlichen Statistiken! 🍻</div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+              <button type="button" class="bubble-improve-btn" onclick="openImproveModal('', 'Hallo! Ich bin dein Bier-KI-Assistent. Frag mich gerne nach den Bierkönigen der einzelnen Jahre...')" title="Antwort verbessern oder Frage einreichen">
+                <span>✏️</span> Antwort verbessern
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-bar">
+          <input type="text" id="chat-input" class="chat-input" placeholder="Frage zur Bierwanderung eingeben..." onkeypress="if(event.key==='Enter') submitChat()" />
+          <button type="button" class="btn-improve" onclick="openImproveModal()" title="Frage und ungenaue/falsche Antwort melden & verbessern">
+            ✏️ Verbessern
+          </button>
+          <button class="send-btn" onclick="submitChat()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. WANDERER LISTE TAB -->
+    <div id="tab-wanderer" class="tab-view">
+      <div style="margin-bottom: 12px;">
+        <h2 style="font-size: 1.3rem; font-weight: 800;">📋 Alle 33 Wanderer</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Tippe auf einen Wanderer, um die Jahres-Historie zu sehen</p>
+      </div>
+      <input type="text" id="wanderer-search" class="search-box" placeholder="🔍 Wanderer suchen..." oninput="filterWanderer()" />
+      <div id="wanderer-list-container"></div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('tab-countdown')">
+      <span class="nav-icon">⏱️</span>
+      <span>Countdown</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-bierwanderungen')">
+      <span class="nav-icon">🥾</span>
+      <span>Bierwanderungen</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-king')">
+      <span class="nav-icon">👑</span>
+      <span>Bierkönig</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-ai')">
+      <span class="nav-icon">🤖</span>
+      <span>Bier-KI</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-wanderer')">
+      <span class="nav-icon">👥</span>
+      <span>Wanderer</span>
+    </button>
+  </nav>
+
+  <script>
+    /* ==========================================================
+       DATENBANK AUS BW.sql
+       ========================================================== */
+    const WANDERER = [
+      { id: 1, name: 'Che', ausweis: '712012-120' },
+      { id: 2, name: 'Konrad', ausweis: '782006-110' },
+      { id: 3, name: 'Birk', ausweis: '762006-112' },
+      { id: 4, name: 'Sirke', ausweis: '762006-109' },
+      { id: 5, name: 'Frank B.', ausweis: '800000-130' },
+      { id: 6, name: 'Christian', ausweis: '852014-123' },
+      { id: 7, name: 'Volker', ausweis: '782005-101' },
+      { id: 8, name: 'Sven', ausweis: '772008-117' },
+      { id: 9, name: 'Glassi', ausweis: '782005-102' },
+      { id: 10, name: 'Michael H.', ausweis: '800000-131' },
+      { id: 11, name: 'Andre', ausweis: '842014-122' },
+      { id: 12, name: 'Norbert', ausweis: '800000-132' },
+      { id: 13, name: 'Frank', ausweis: '772005-103' },
+      { id: 14, name: 'Mike', ausweis: '782017-124' },
+      { id: 15, name: 'Kubi', ausweis: '742005-104' },
+      { id: 16, name: 'Thomas', ausweis: '752007-115' },
+      { id: 17, name: 'Mike L.', ausweis: '772005-105' },
+      { id: 18, name: 'Robby', ausweis: '802016-125' },
+      { id: 19, name: 'Daniel', ausweis: '772005-106' },
+      { id: 20, name: 'Manni', ausweis: '852015-121' },
+      { id: 21, name: 'Clemens', ausweis: '822009-119' },
+      { id: 22, name: 'Mirko', ausweis: '772005-107' },
+      { id: 23, name: 'Torsten', ausweis: '772009-118' },
+      { id: 24, name: 'Jens', ausweis: '742009-116' },
+      { id: 25, name: 'Moi', ausweis: '772007-113' },
+      { id: 26, name: 'Alex', ausweis: '772007-114' },
+      { id: 27, name: 'Holger', ausweis: '802013-122' },
+      { id: 28, name: 'Rico', ausweis: '782006-111' },
+      { id: 29, name: 'Sören', ausweis: '782005-108' },
+      { id: 30, name: 'Dirk', ausweis: '642018-128' },
+      { id: 31, name: 'Nils', ausweis: '862018-129' },
+      { id: 32, name: 'Enno', ausweis: '822019-127' },
+      { id: 33, name: 'Marco', ausweis: '772025-126' }
+    ];
+
+    const KONSUM = [
+      // Che
+      { wid: 1, jahr: 2013, biere: 11 }, { wid: 1, jahr: 2012, biere: 13 },
+      // Konrad
+      { wid: 2, jahr: 2026, biere: 3 }, { wid: 2, jahr: 2025, biere: 4 }, { wid: 2, jahr: 2024, biere: 6 }, { wid: 2, jahr: 2022, biere: 10 }, { wid: 2, jahr: 2021, biere: 10 }, { wid: 2, jahr: 2018, biere: 1 }, { wid: 2, jahr: 2016, biere: 8 }, { wid: 2, jahr: 2015, biere: 6 }, { wid: 2, jahr: 2013, biere: 5 }, { wid: 2, jahr: 2011, biere: 20 }, { wid: 2, jahr: 2009, biere: 16 }, { wid: 2, jahr: 2007, biere: 18 }, { wid: 2, jahr: 2006, biere: 0 },
+      // Birk
+      { wid: 3, jahr: 2006, biere: 0 },
+      // Sirke
+      { wid: 4, jahr: 2006, biere: 0 },
+      // Frank B.
+      { wid: 5, jahr: 2013, biere: 11 },
+      // Christian
+      { wid: 6, jahr: 2024, biere: 12 }, { wid: 6, jahr: 2023, biere: 13 }, { wid: 6, jahr: 2021, biere: 16 }, { wid: 6, jahr: 2020, biere: 19 }, { wid: 6, jahr: 2019, biere: 19 }, { wid: 6, jahr: 2018, biere: 13 }, { wid: 6, jahr: 2014, biere: 15 },
+      // Volker
+      { wid: 7, jahr: 2025, biere: 8 }, { wid: 7, jahr: 2023, biere: 12 }, { wid: 7, jahr: 2020, biere: 13 }, { wid: 7, jahr: 2019, biere: 9 }, { wid: 7, jahr: 2017, biere: 8 }, { wid: 7, jahr: 2014, biere: 11 }, { wid: 7, jahr: 2013, biere: 7 }, { wid: 7, jahr: 2010, biere: 11 }, { wid: 7, jahr: 2007, biere: 11 }, { wid: 7, jahr: 2006, biere: 0 }, { wid: 7, jahr: 2005, biere: 0 },
+      // Sven
+      { wid: 8, jahr: 2026, biere: 12 }, { wid: 8, jahr: 2025, biere: 6 }, { wid: 8, jahr: 2024, biere: 9 }, { wid: 8, jahr: 2023, biere: 14 }, { wid: 8, jahr: 2021, biere: 12 }, { wid: 8, jahr: 2020, biere: 12 }, { wid: 8, jahr: 2018, biere: 14 }, { wid: 8, jahr: 2017, biere: 12 }, { wid: 8, jahr: 2016, biere: 19 }, { wid: 8, jahr: 2015, biere: 11 }, { wid: 8, jahr: 2014, biere: 10 }, { wid: 8, jahr: 2013, biere: 9 }, { wid: 8, jahr: 2012, biere: 13 }, { wid: 8, jahr: 2011, biere: 13 }, { wid: 8, jahr: 2010, biere: 12 }, { wid: 8, jahr: 2009, biere: 12 },
+      // Glassi
+      { wid: 9, jahr: 2014, biere: 15 }, { wid: 9, jahr: 2013, biere: 15 }, { wid: 9, jahr: 2012, biere: 11 }, { wid: 9, jahr: 2011, biere: 11 }, { wid: 9, jahr: 2010, biere: 13 }, { wid: 9, jahr: 2008, biere: 16 }, { wid: 9, jahr: 2007, biere: 19 }, { wid: 9, jahr: 2006, biere: 0 }, { wid: 9, jahr: 2005, biere: 0 },
+      // Michael H.
+      { wid: 10, jahr: 2014, biere: 15 },
+      // Andre
+      { wid: 11, jahr: 2026, biere: 12 }, { wid: 11, jahr: 2025, biere: 9 }, { wid: 11, jahr: 2024, biere: 13 }, { wid: 11, jahr: 2023, biere: 13 }, { wid: 11, jahr: 2022, biere: 11 }, { wid: 11, jahr: 2021, biere: 5 }, { wid: 11, jahr: 2020, biere: 13 }, { wid: 11, jahr: 2019, biere: 12 }, { wid: 11, jahr: 2018, biere: 11 }, { wid: 11, jahr: 2017, biere: 11 }, { wid: 11, jahr: 2016, biere: 19 }, { wid: 11, jahr: 2015, biere: 14 }, { wid: 11, jahr: 2014, biere: 10 },
+      // Norbert
+      { wid: 12, jahr: 2022, biere: 10 }, { wid: 12, jahr: 2020, biere: 16 }, { wid: 12, jahr: 2016, biere: 13 },
+      // Frank
+      { wid: 13, jahr: 2026, biere: 13 }, { wid: 13, jahr: 2025, biere: 8 }, { wid: 13, jahr: 2024, biere: 12 }, { wid: 13, jahr: 2023, biere: 12 }, { wid: 13, jahr: 2022, biere: 14 }, { wid: 13, jahr: 2021, biere: 13 }, { wid: 13, jahr: 2020, biere: 12 }, { wid: 13, jahr: 2019, biere: 13 }, { wid: 13, jahr: 2018, biere: 13 }, { wid: 13, jahr: 2017, biere: 17 }, { wid: 13, jahr: 2016, biere: 16 }, { wid: 13, jahr: 2015, biere: 13 }, { wid: 13, jahr: 2014, biere: 12 }, { wid: 13, jahr: 2013, biere: 0 }, { wid: 13, jahr: 2012, biere: 12 }, { wid: 13, jahr: 2011, biere: 15 }, { wid: 13, jahr: 2010, biere: 10 }, { wid: 13, jahr: 2009, biere: 11 }, { wid: 13, jahr: 2008, biere: 12 }, { wid: 13, jahr: 2007, biere: 13 }, { wid: 13, jahr: 2006, biere: 0 }, { wid: 13, jahr: 2005, biere: 0 },
+      // Mike
+      { wid: 14, jahr: 2020, biere: 10 }, { wid: 14, jahr: 2019, biere: 12 }, { wid: 14, jahr: 2018, biere: 8 }, { wid: 14, jahr: 2017, biere: 9 },
+      // Kubi
+      { wid: 15, jahr: 2020, biere: 16 }, { wid: 15, jahr: 2016, biere: 19 }, { wid: 15, jahr: 2015, biere: 16 }, { wid: 15, jahr: 2013, biere: 13 }, { wid: 15, jahr: 2012, biere: 15 }, { wid: 15, jahr: 2011, biere: 14 }, { wid: 15, jahr: 2010, biere: 13 }, { wid: 15, jahr: 2009, biere: 15 }, { wid: 15, jahr: 2008, biere: 9 }, { wid: 15, jahr: 2007, biere: 16 }, { wid: 15, jahr: 2006, biere: 0 }, { wid: 15, jahr: 2005, biere: 0 },
+      // Thomas
+      { wid: 16, jahr: 2007, biere: 5 },
+      // Mike L.
+      { wid: 17, jahr: 2010, biere: 8 }, { wid: 17, jahr: 2006, biere: 0 }, { wid: 17, jahr: 2005, biere: 0 },
+      // Robby
+      { wid: 18, jahr: 2019, biere: 10 }, { wid: 18, jahr: 2018, biere: 10 }, { wid: 18, jahr: 2016, biere: 11 },
+      // Daniel
+      { wid: 19, jahr: 2026, biere: 11 }, { wid: 19, jahr: 2025, biere: 12 }, { wid: 19, jahr: 2024, biere: 8 }, { wid: 19, jahr: 2016, biere: 8 }, { wid: 19, jahr: 2013, biere: 5 }, { wid: 19, jahr: 2010, biere: 13 }, { wid: 19, jahr: 2009, biere: 13 }, { wid: 19, jahr: 2007, biere: 11 }, { wid: 19, jahr: 2006, biere: 0 }, { wid: 19, jahr: 2005, biere: 0 },
+      // Manni
+      { wid: 20, jahr: 2026, biere: 11 }, { wid: 20, jahr: 2025, biere: 24 }, { wid: 20, jahr: 2023, biere: 17 }, { wid: 20, jahr: 2021, biere: 17 }, { wid: 20, jahr: 2019, biere: 24 }, { wid: 20, jahr: 2018, biere: 22 }, { wid: 20, jahr: 2017, biere: 23 }, { wid: 20, jahr: 2016, biere: 23 }, { wid: 20, jahr: 2015, biere: 23 },
+      // Clemens
+      { wid: 21, jahr: 2026, biere: 16 }, { wid: 21, jahr: 2025, biere: 14 }, { wid: 21, jahr: 2024, biere: 17 }, { wid: 21, jahr: 2022, biere: 18 }, { wid: 21, jahr: 2020, biere: 20 }, { wid: 21, jahr: 2017, biere: 17 }, { wid: 21, jahr: 2016, biere: 20 }, { wid: 21, jahr: 2015, biere: 22 }, { wid: 21, jahr: 2014, biere: 21 }, { wid: 21, jahr: 2012, biere: 18 }, { wid: 21, jahr: 2011, biere: 21 }, { wid: 21, jahr: 2009, biere: 20 },
+      // Mirko
+      { wid: 22, jahr: 2026, biere: 15 }, { wid: 22, jahr: 2025, biere: 14 }, { wid: 22, jahr: 2024, biere: 17 }, { wid: 22, jahr: 2023, biere: 18 }, { wid: 22, jahr: 2022, biere: 20 }, { wid: 22, jahr: 2020, biere: 20 }, { wid: 22, jahr: 2019, biere: 21 }, { wid: 22, jahr: 2015, biere: 20 }, { wid: 22, jahr: 2014, biere: 19 }, { wid: 22, jahr: 2012, biere: 16 }, { wid: 22, jahr: 2011, biere: 19 }, { wid: 22, jahr: 2010, biere: 15 }, { wid: 22, jahr: 2009, biere: 16 }, { wid: 22, jahr: 2008, biere: 17 }, { wid: 22, jahr: 2006, biere: 0 }, { wid: 22, jahr: 2005, biere: 0 },
+      // Torsten
+      { wid: 23, jahr: 2009, biere: 10 },
+      // Moi
+      { wid: 25, jahr: 2025, biere: 9 }, { wid: 25, jahr: 2010, biere: 12 }, { wid: 25, jahr: 2009, biere: 10 }, { wid: 25, jahr: 2007, biere: 9 },
+      // Alex
+      { wid: 26, jahr: 2026, biere: 9 }, { wid: 26, jahr: 2025, biere: 9 }, { wid: 26, jahr: 2024, biere: 10 }, { wid: 26, jahr: 2021, biere: 8 }, { wid: 26, jahr: 2020, biere: 11 }, { wid: 26, jahr: 2018, biere: 9 }, { wid: 26, jahr: 2016, biere: 10 }, { wid: 26, jahr: 2015, biere: 11 }, { wid: 26, jahr: 2014, biere: 10 }, { wid: 26, jahr: 2012, biere: 10 }, { wid: 26, jahr: 2011, biere: 9 }, { wid: 26, jahr: 2010, biere: 9 }, { wid: 26, jahr: 2007, biere: 10 },
+      // Holger
+      { wid: 27, jahr: 2025, biere: 7 }, { wid: 27, jahr: 2018, biere: 8 }, { wid: 27, jahr: 2018, biere: 10 }, { wid: 27, jahr: 2017, biere: 12 }, { wid: 27, jahr: 2013, biere: 12 },
+      // Rico
+      { wid: 28, jahr: 2025, biere: 8 }, { wid: 28, jahr: 2023, biere: 11 }, { wid: 28, jahr: 2022, biere: 9 }, { wid: 28, jahr: 2020, biere: 13 }, { wid: 28, jahr: 2019, biere: 11 }, { wid: 28, jahr: 2018, biere: 10 }, { wid: 28, jahr: 2017, biere: 11 }, { wid: 28, jahr: 2013, biere: 10 }, { wid: 28, jahr: 2012, biere: 14 }, { wid: 28, jahr: 2011, biere: 13 }, { wid: 28, jahr: 2010, biere: 12 }, { wid: 28, jahr: 2006, biere: 0 },
+      // Sören
+      { wid: 29, jahr: 2026, biere: 12 }, { wid: 29, jahr: 2025, biere: 11 }, { wid: 29, jahr: 2016, biere: 7 }, { wid: 29, jahr: 2012, biere: 12 }, { wid: 29, jahr: 2011, biere: 10 }, { wid: 29, jahr: 2010, biere: 12 }, { wid: 29, jahr: 2008, biere: 12 }, { wid: 29, jahr: 2007, biere: 8 }, { wid: 29, jahr: 2006, biere: 0 }, { wid: 29, jahr: 2005, biere: 0 },
+      // Dirk
+      { wid: 30, jahr: 2026, biere: 9 }, { wid: 30, jahr: 2025, biere: 11 }, { wid: 30, jahr: 2024, biere: 11 }, { wid: 30, jahr: 2023, biere: 12 }, { wid: 30, jahr: 2020, biere: 12 }, { wid: 30, jahr: 2019, biere: 11 }, { wid: 30, jahr: 2018, biere: 10 },
+      // Nils
+      { wid: 31, jahr: 2026, biere: 11 }, { wid: 31, jahr: 2025, biere: 9 }, { wid: 31, jahr: 2023, biere: 11 }, { wid: 31, jahr: 2022, biere: 11 }, { wid: 31, jahr: 2021, biere: 11 }, { wid: 31, jahr: 2020, biere: 10 }, { wid: 31, jahr: 2019, biere: 10 }, { wid: 31, jahr: 2018, biere: 8 },
+      // Enno
+      { wid: 32, jahr: 2026, biere: 13 }, { wid: 32, jahr: 2025, biere: 11 }, { wid: 32, jahr: 2023, biere: 14 }, { wid: 32, jahr: 2022, biere: 15 }, { wid: 32, jahr: 2021, biere: 14 }, { wid: 32, jahr: 2020, biere: 16 }, { wid: 32, jahr: 2019, biere: 16 },
+      // Marco
+      { wid: 33, jahr: 2026, biere: 11 }, { wid: 33, jahr: 2025, biere: 13 }
+    ];
+
+    /* ==========================================================
+       BERECHNUNGEN & STATISTIKEN
+       ========================================================== */
+    const wandererMap = new Map();
+    WANDERER.forEach(w => wandererMap.set(w.id, w));
+
+    // Ewige Statistik berechnen
+    const wandererStats = WANDERER.map(w => {
+      const entries = KONSUM.filter(k => k.wid === w.id);
+      const total = entries.reduce((sum, e) => sum + e.biere, 0);
+      const count = entries.length;
+      const maxBeers = entries.length > 0 ? Math.max(...entries.map(e => e.biere)) : 0;
+      return {
+        wanderer: w,
+        total,
+        count,
+        maxBeers,
+        entries: entries.sort((a, b) => b.jahr - a.jahr)
+      };
+    }).sort((a, b) => b.total - a.total);
+
+    // Jahr 2026 Ranking
+    const ranking2026 = KONSUM
+      .filter(k => k.jahr === 2026)
+      .map(k => ({ wanderer: wandererMap.get(k.wid), biere: k.biere }))
+      .sort((a, b) => b.biere - a.biere);
+
+    /* ==========================================================
+       COUNTDOWN ENGINE (Ziel: 13.09.2027, 10:00 Uhr)
+       ========================================================== */
+    const targetDate = new Date(2027, 8, 13, 10, 0, 0, 0); // Monat ist 0-basiert: 8 = September
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById('cnt-days').textContent = "0";
+        document.getElementById('cnt-hours').textContent = "00";
+        document.getElementById('cnt-minutes').textContent = "00";
+        document.getElementById('cnt-seconds').textContent = "00";
+        return;
+      }
+
+      const seconds = Math.floor((diff / 1000) % 60);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      document.getElementById('cnt-days').textContent = days;
+      document.getElementById('cnt-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cnt-minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('cnt-seconds').textContent = String(seconds).padStart(2, '0');
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    /* ==========================================================
+       TAB STEUERUNG
+       ========================================================== */
+    let aiVisitedInSession = false;
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+
+      const navButtons = document.querySelectorAll('.bottom-nav .nav-item');
+      navButtons.forEach(btn => btn.classList.remove('active'));
+
+      const tabMap = {
+        'tab-countdown': 0,
+        'tab-bierwanderungen': 1,
+        'tab-king': 2,
+        'tab-ai': 3,
+        'tab-wanderer': 4
+      };
+      if (tabMap[tabId] !== undefined && navButtons[tabMap[tabId]]) {
+        navButtons[tabMap[tabId]].classList.add('active');
+      }
+
+      if (tabId === 'tab-ai') {
+        // Promptfenster bei der ersten Benutzung der Bier-KI anzeigen
+        if (!aiVisitedInSession) {
+          aiVisitedInSession = true;
+          document.getElementById('ai-prompt-modal').classList.remove('hidden');
+          setTimeout(() => {
+            const inp = document.getElementById('intro-prompt-input');
+            if (inp) inp.focus();
+          }, 200);
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchSubtab(subtabId) {
+      document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('subtab-ewige').style.display = subtabId === 'ewige' ? 'block' : 'none';
+      document.getElementById('subtab-2026').style.display = subtabId === '2026' ? 'block' : 'none';
+      document.getElementById('subtab-rekorde').style.display = subtabId === 'rekorde' ? 'block' : 'none';
+    }
+
+    /* ==========================================================
+       RENDER STATS & WANDERER
+       ========================================================== */
+    function initStats() {
+      // 1. Ewiger König Banner
+      const eternalKing = wandererStats[0];
+      if (eternalKing) {
+        document.getElementById('eternal-king-name').textContent = eternalKing.wanderer.name;
+        document.getElementById('eternal-king-stats').textContent = `${eternalKing.total} Biere gesamt • ${eternalKing.count} Wanderungen`;
+      }
+
+      // 2. Ewige Liste render
+      const ewigeContainer = document.getElementById('ewige-list-container');
+      ewigeContainer.innerHTML = '';
+      wandererStats.forEach((st, idx) => {
+        const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+        const avg = st.count > 0 ? (st.total / st.count).toFixed(1) : '0';
+        const card = document.createElement('div');
+        card.className = 'rank-card';
+        card.innerHTML = `
+          <div class="rank-badge">${medal}</div>
+          <div class="rank-info">
+            <div class="rank-name">${st.wanderer.name}</div>
+            <div class="rank-sub">${st.count} Wanderungen • Ø ${avg} 🍺 • Rekord: ${st.maxBeers} Biere</div>
+          </div>
+          <div class="beer-tag">${st.total} 🍺</div>
+        `;
+        ewigeContainer.appendChild(card);
+      });
+
+      // 3. Jahr 2026 render
+      const yearContainer = document.getElementById('year-2026-list-container');
+      yearContainer.innerHTML = '';
+      ranking2026.forEach((r, idx) => {
+        const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+        const card = document.createElement('div');
+        card.className = 'rank-card';
+        card.innerHTML = `
+          <div class="rank-badge">${medal}</div>
+          <div class="rank-info">
+            <div class="rank-name">${r.wanderer.name}</div>
+            <div class="rank-sub">Bierwanderung 2026</div>
+          </div>
+          <div class="beer-tag">${r.biere} 🍺</div>
+        `;
+        yearContainer.appendChild(card);
+      });
+
+      // 4. Wanderer Liste
+      renderWandererList(WANDERER);
+    }
+
+    function renderWandererList(list) {
+      const container = document.getElementById('wanderer-list-container');
+      container.innerHTML = '';
+      list.forEach(w => {
+        const st = wandererStats.find(s => s.wanderer.id === w.id);
+        const card = document.createElement('div');
+        card.className = 'wanderer-card';
+        card.onclick = () => {
+          const hist = card.querySelector('.wanderer-history');
+          hist.classList.toggle('open');
+        };
+
+        let chipsHtml = '';
+        if (st && st.entries.length > 0) {
+          chipsHtml = st.entries.map(e => `<span class="history-chip">${e.jahr}: <b>${e.biere}</b>🍺</span>`).join('');
+        } else {
+          chipsHtml = '<span style="color: var(--text-muted); font-size:0.8rem;">Keine Konsumdaten vorhanden</span>';
+        }
+
+        const avgStr = st && st.count > 0 ? (st.total / st.count).toFixed(1) : '0';
+        card.innerHTML = `
+          <div class="wanderer-header">
+            <div>
+              <div class="wanderer-name">${w.name}</div>
+              <div class="wanderer-pass">Ausweis: ${w.ausweis || 'Unbekannt'} • ID: #${w.id} • Ø ${avgStr} 🍺/Tour</div>
+            </div>
+            <div class="beer-tag">${st ? st.total : 0} 🍺</div>
+          </div>
+          <div class="wanderer-history">
+            <div style="font-weight:700; margin-bottom:4px;">Historie nach Jahren (${st ? st.count : 0} Wanderungen • Ø ${avgStr} 🍺):</div>
+            <div class="history-chips">${chipsHtml}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterWanderer() {
+      const q = document.getElementById('wanderer-search').value.toLowerCase().trim();
+      const filtered = WANDERER.filter(w => w.name.toLowerCase().includes(q) || (w.ausweis && w.ausweis.toLowerCase().includes(q)));
+      renderWandererList(filtered);
+    }
+
+    /* ==========================================================
+       QWEN2.5-CODER-7B & BIER-KI ENGINE
+       ========================================================== */
+    const QWEN_CONFIG = {
+      model: 'qwen/qwen-2.5-coder-7b-instruct',
+      mode: localStorage.getItem('bw_qwen_mode') || 'hybrid',
+      apiKey: localStorage.getItem('bw_qwen_apikey') || '',
+      ollamaUrl: localStorage.getItem('bw_qwen_ollama_url') || 'http://localhost:11434'
+    };
+
+    function toggleQwenSettings() {
+      const card = document.getElementById('qwen-settings-card');
+      const isVisible = card.style.display !== 'none';
+      card.style.display = isVisible ? 'none' : 'block';
+      if (!isVisible) {
+        document.getElementById('qwen-mode-select').value = QWEN_CONFIG.mode;
+        document.getElementById('qwen-api-key').value = QWEN_CONFIG.apiKey;
+        document.getElementById('qwen-ollama-url').value = QWEN_CONFIG.ollamaUrl;
+        handleQwenModeChange();
+      }
+    }
+
+    function handleQwenModeChange() {
+      const mode = document.getElementById('qwen-mode-select').value;
+      document.getElementById('qwen-api-key-group').style.display = mode === 'openrouter' ? 'block' : 'none';
+      document.getElementById('qwen-ollama-url-group').style.display = mode === 'ollama' ? 'block' : 'none';
+    }
+
+    function saveQwenSettings() {
+      QWEN_CONFIG.mode = document.getElementById('qwen-mode-select').value;
+      QWEN_CONFIG.apiKey = document.getElementById('qwen-api-key').value.trim();
+      QWEN_CONFIG.ollamaUrl = document.getElementById('qwen-ollama-url').value.trim() || 'http://localhost:11434';
+
+      localStorage.setItem('bw_qwen_mode', QWEN_CONFIG.mode);
+      localStorage.setItem('bw_qwen_apikey', QWEN_CONFIG.apiKey);
+      localStorage.setItem('bw_qwen_ollama_url', QWEN_CONFIG.ollamaUrl);
+
+      updateModelIndicatorBadge();
+      document.getElementById('qwen-settings-card').style.display = 'none';
+
+      appendMessage(`⚙️ Qwen2.5-Coder Konfiguration aktualisiert: Modus "${QWEN_CONFIG.mode}". Bereit für Anfragen!`, 'bot');
+    }
+
+    function updateModelIndicatorBadge() {
+      const badge = document.getElementById('model-indicator-badge');
+      if (!badge) return;
+      if (QWEN_CONFIG.mode === 'openrouter') {
+        badge.textContent = 'Qwen2.5-Coder-7B (Cloud API)';
+        badge.style.color = '#38bdf8';
+        badge.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+      } else if (QWEN_CONFIG.mode === 'ollama') {
+        badge.textContent = 'Qwen2.5-Coder-7B (Ollama)';
+        badge.style.color = '#4ade80';
+        badge.style.borderColor = 'rgba(74, 222, 128, 0.4)';
+      } else {
+        badge.textContent = 'Qwen 2.5 Coder (Hybrid SQL)';
+        badge.style.color = 'var(--primary)';
+        badge.style.borderColor = 'rgba(255, 184, 0, 0.3)';
+      }
+    }
+
+    function sendPrompt(text) {
+      document.getElementById('chat-input').value = text;
+      submitChat();
+    }
+
+    let lastUserQuestion = '';
+    let lastBotAnswer = '';
+
+    async function submitChat() {
+      const input = document.getElementById('chat-input');
+      const q = input.value.trim();
+      if (!q) return;
+
+      lastUserQuestion = q;
+      appendMessage(q, 'user');
+      input.value = '';
+
+      // Typing Indicator
+      const typingId = 'typing-' + Date.now();
+      appendTypingIndicator(typingId);
+
+      try {
+        let answer = '';
+        if (QWEN_CONFIG.mode === 'openrouter' && QWEN_CONFIG.apiKey) {
+          answer = await callQwenOpenRouter(q);
+        } else if (QWEN_CONFIG.mode === 'ollama') {
+          answer = await callQwenOllama(q);
+        } else {
+          // Lokaler Qwen2.5-Coder SQL-Inference Modus
+          const res = processAiQuery(q);
+          answer = res.answer;
+        }
+        removeTypingIndicator(typingId);
+        lastBotAnswer = answer;
+        appendMessage(answer, 'bot', q);
+      } catch (err) {
+        removeTypingIndicator(typingId);
+        // Fallback auf die native Engine bei Netzwerkfehlern
+        console.warn('Qwen API Fehler, nutze Fallback:', err);
+        const fallbackRes = processAiQuery(q);
+        const fbAnswer = `⚡ [Qwen2.5-Coder Fallback]\n${fallbackRes.answer}`;
+        lastBotAnswer = fbAnswer;
+        appendMessage(fbAnswer, 'bot', q);
+      }
+    }
+
+    function appendTypingIndicator(id) {
+      const box = document.getElementById('chat-box');
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble bot';
+      bubble.id = id;
+      bubble.innerHTML = '<span style="color:var(--text-muted); font-size:0.85rem;">🧠 Qwen2.5-Coder analysiert die Datenbank...</span>';
+      box.appendChild(bubble);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function removeTypingIndicator(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    // Schema-Definition für Qwen2.5-Coder System Prompt
+    const QWEN_SQL_SYSTEM_PROMPT = `Du bist der Qwen2.5-Coder-7B-Instruct KI-Assistent für die jährliche Bierwanderung (2005-2026).
+Die relationale Datenbank hat folgendes Schema:
+TABLE wanderer (id INT PRIMARY KEY, name TEXT, ausweis TEXT);
+TABLE konsum (jahr INT, wid INT REFERENCES wanderer(id), biere INT);
+Statistische Highlights & Fakten:
+- 33 Wanderer, 22 Jahre (2005 bis 2026).
+- Erste Bierwanderung: Fand im Jahr 2005 statt (kleinste Jahreszahl der Datenbank).
+- Gesamtbieranzahl aller Wanderungen: 2.752 Biere wurden in 22 Jahren insgesamt von allen Teilnehmern getrunken (Durchschnitt: 125,1 Biere pro Jahr).
+- Meiste Gesamtbiere in einem Jahr (alle Wanderer zusammen): Rekordjahr 2020 mit 213 Bieren gesamt (Platz 2: 2025 mit 187 Bieren, Platz 3: 2016 mit 173 Bieren).
+- Meiste Teilnehmer in einem Jahr: Rekordjahr 2025 mit 18 Wanderern (Platz 2: 2020 mit 15 Wanderern, Platz 3: 2018 und 2026 mit je 14 Wanderern).
+- Rote Laterne (wenigste getrunkene Biere in einem Jahr): Bekommt der Teilnehmer mit dem geringsten Bierkonsum des jeweiligen Jahres. Absoluter Tiefstwert: Konrad mit nur 1 Bier (2018). Im Jahr 2026: Konrad (3 Biere), 2025: Konrad (4 Biere).
+- Durchschnittswerte: Berechne den genauen Schnitt (Gesamtbiere / Anzahl Teilnahmen des Wanderers). Z.B. Andre: 153 Biere in 13 Teilnahmen = Ø 11,77 Biere pro Wanderung.
+- Höchster Einzelkonsum in einem Jahr: Manni mit 24 Bieren (in den Jahren 2019 und 2025).
+- Meiste Bierkönig-Titel: Clemens (7x) und Manni (7x), gefolgt von Mirko (6x).
+- Königlicher Schluckspecht (ewige Gesamtbiere über alle Jahre): Mirko (247 Biere), Frank (241 Biere), Clemens (224 Biere).
+- Nächste Bierwanderung: 13. September 2027 um 10:00 Uhr.
+Regeln:
+- Wenn nach der ersten Bierwanderung gefragt wird: Nenne das kleinste Jahr 2005.
+- Wenn nach dem Jahr gefragt wird, in dem ein Teilnehmer die meisten Biere getrunken hat: Ermittle und nenne das exakte Jahr mit der genauen Höchstzahl an Bieren.
+- Wenn nach Durchschnittswerten gefragt wird: Gib den Durchschnittswert bezogen auf die tatsächlichen Teilnahmen des Wanderers an (z.B. Andre: 11,77 Biere pro Teilnahme).
+- Wenn nach dem Jahr mit den meisten Teilnehmern gefragt wird: Nenne das Rekordjahr 2025 mit 18 Teilnehmern.
+- Wenn nach der Roten Laterne gefragt wird: Erkläre die Rote Laterne als Auszeichnung für die wenigsten Biere in einem Jahr und nenne die passenden Werte.
+Antworte auf Deutsch, präzise, freundlich und hebe die passenden Bier-Fakten hervor.`;
+
+    async function callQwenOpenRouter(userPrompt) {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${QWEN_CONFIG.apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'qwen/qwen-2.5-coder-7b-instruct',
+          messages: [
+            { role: 'system', content: QWEN_SQL_SYSTEM_PROMPT },
+            { role: 'user', content: userPrompt }
+          ],
+          temperature: 0.2
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenRouter HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices && data.choices[0] ? data.choices[0].message.content : 'Keine Antwort erhalten.';
+    }
+
+    async function callQwenOllama(userPrompt) {
+      const response = await fetch(`${QWEN_CONFIG.ollamaUrl}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'qwen2.5-coder:7b',
+          system: QWEN_SQL_SYSTEM_PROMPT,
+          prompt: userPrompt,
+          stream: false
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ollama HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.response || 'Keine Antwort von Ollama.';
+    }
+
+    function appendMessage(text, role, question = '') {
+      const box = document.getElementById('chat-box');
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${role}`;
+      
+      const contentEl = document.createElement('div');
+      contentEl.textContent = text;
+      contentEl.style.whiteSpace = 'pre-wrap';
+      bubble.appendChild(contentEl);
+
+      // Wenn es eine Bot-Antwort ist, Button zum Verbessern anhängen
+      if (role === 'bot') {
+        const qText = question || lastUserQuestion || '';
+        const actionRow = document.createElement('div');
+        actionRow.style.display = 'flex';
+        actionRow.style.alignItems = 'center';
+        actionRow.style.gap = '8px';
+        actionRow.style.marginTop = '6px';
+
+        const improveBtn = document.createElement('button');
+        improveBtn.type = 'button';
+        improveBtn.className = 'bubble-improve-btn';
+        improveBtn.innerHTML = '<span>✏️</span> Antwort verbessern';
+        improveBtn.title = 'Diese Antwort als falsch/ungenau melden und Verbesserung speichern';
+        improveBtn.onclick = function(e) {
+          e.stopPropagation();
+          openImproveModal(qText, text);
+        };
+        actionRow.appendChild(improveBtn);
+        bubble.appendChild(actionRow);
+      }
+
+      box.appendChild(bubble);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function processAiQuery(query) {
+      const q = query.toLowerCase();
+      let answer = "";
+
+      // 1. Jahr erkennen (2-stellig oder 4-stellig, z.B. "2024", "2019", "09", "'25")
+      const fullYearMatch = q.match(/\b(20[0-2][0-9])\b/);
+      let targetYear = null;
+      if (fullYearMatch) {
+        targetYear = parseInt(fullYearMatch[1], 10);
+      } else if (q.includes('letztes jahr')) {
+        targetYear = 2025;
+      } else if (q.includes('dieses jahr') || q.includes('heute') || q.includes('aktuell')) {
+        targetYear = 2026;
+      }
+
+      // 2. Gesamtkonsum / Gesamtbieranzahl über alle Wanderungen
+      const isTotalQuery = (
+        q.includes('gesamt') && (q.includes('bier') || q.includes('anzahl') || q.includes('konsum') || q.includes('summe') || q.includes('menge'))
+      ) || (
+        q.includes('alle wanderung') || q.includes('allen wanderung') || q.includes('alle jahre') || q.includes('allen jahren')
+      ) || q.includes('bieranzahl') || q.includes('wie viele biere insgesamt') || q.includes('wie viel bier insgesamt') || q.includes('gesamtkonsum');
+
+      // Exakte Namenssuche mit Wortgrenzen (damit z.B. "welchem" nicht fälschlicherweise "Che" matcht)
+      const sortedWandererNames = [...WANDERER].sort((a, b) => b.name.length - a.name.length);
+      const matchedWanderer = sortedWandererNames.find(w => {
+        const escaped = w.name.toLowerCase().replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+        const regex = new RegExp('(^|[^a-z0-9äöüß])' + escaped + '($|[^a-z0-9äöüß])', 'i');
+        return regex.test(q);
+      });
+
+      if (isTotalQuery && !targetYear && !matchedWanderer && !q.includes('schluckspecht') && !q.includes('könig') && !q.includes('titel')) {
+        const totalAllBeers = KONSUM.reduce((sum, k) => sum + k.biere, 0);
+        const distinctYears = [...new Set(KONSUM.map(k => k.jahr))].sort((a, b) => a - b);
+        const distinctWanderers = new Set(KONSUM.filter(k => k.biere > 0).map(k => k.wid)).size;
+        const avgPerYear = (totalAllBeers / distinctYears.length).toFixed(1);
+
+        // Top 3 Jahre
+        const yMap = {};
+        KONSUM.forEach(k => { yMap[k.jahr] = (yMap[k.jahr] || 0) + k.biere; });
+        const topYearList = Object.entries(yMap).sort((a, b) => b[1] - a[1]);
+
+        answer = `🍺 **Gesamtkonsum aller Bierwanderungen (2005 – 2026):**\n\n` +
+          `In den 22 Jahren wurden von allen Teilnehmern insgesamt unglaubliche **${totalAllBeers.toLocaleString('de-DE')} Biere** getrunken! 🍻🎉\n\n` +
+          `📊 **Die Kennzahlen aus der SQL-Datenbank:**\n` +
+          `• 🗓️ Zeitraum: **${distinctYears.length} Wanderungen** (${distinctYears[0]} bis ${distinctYears[distinctYears.length - 1]})\n` +
+          `• 👥 Aktive Wanderer: **${distinctWanderers} Teilnehmer** mit Wertung\n` +
+          `• 📈 Durchschnitt pro Jahr: **${avgPerYear} Biere** aller Teilnehmer zusammen\n` +
+          `• 🔥 Rekordjahr: **${topYearList[0][0]}** mit ${topYearList[0][1]} Bieren\n\n` +
+          `🏆 Die ewigen Top-3-Trinker (Schluckspechte) steuern dazu bei:\n` +
+          `• Mirko: 247 Biere | Frank: 241 Biere | Clemens: 224 Biere`;
+      }
+      // 3. Spezifische Frage zu einem bestimmten Wanderer (Vorrang vor allgemeinen Jahres- und Terminfragen)
+      else if (matchedWanderer && (q.includes('jahr') || q.includes('wann') || q.includes('rekord') || q.includes('meist') || q.includes('höchst') || q.includes('beste') || q.includes('spitz') || q.includes('statistik') || q.includes('bier') || q.includes('wie viel') || q.includes('wie viele') || q.includes('durchschnitt') || q.includes('schnitt') || q.includes('mittelwert'))) {
+        const st = wandererStats.find(s => s.wanderer.id === matchedWanderer.id);
+        const entries = st ? [...st.entries].sort((a, b) => b.biere - a.biere) : [];
+
+        // Durchschnitts-Abfrage für diesen Wanderer (z.B. "wieviel bier hat andre im durchschnitt bei seinen teilnahmen getrunken")
+        if (q.includes('durchschnitt') || q.includes('schnitt') || q.includes('mittelwert') || q.includes('im schnitt') || q.includes('pro wanderung') || q.includes('pro teilnahme')) {
+          if (!st || st.count === 0) {
+            answer = `📊 Für **${matchedWanderer.name}** liegen leider keine Teilnahmen oder Konsumdaten vor.`;
+          } else {
+            const avg = (st.total / st.count).toFixed(2);
+            const peakYear = entries.length > 0 ? `${entries[0].jahr} (${entries[0].biere} Biere)` : 'k. A.';
+            answer = `📊 **Durchschnittlicher Bierkonsum von ${matchedWanderer.name}:**\n\n` +
+              `• 🍺 Durchschnitt pro Teilnahme: **${avg} Biere**\n` +
+              `• 🥾 Teilnahmen insgesamt: **${st.count} Bierwanderungen**\n` +
+              `• 🍻 Gesamt getrunkene Biere: **${st.total} Biere**\n` +
+              `• ⚡ Persönlicher Jahresrekord: **${peakYear}**\n\n` +
+              `💡 Bei seinen ${st.count} Teilnahmen hat ${matchedWanderer.name} im Schnitt also rund ${(st.total / st.count).toFixed(1)} Biere pro Tour getrunken!`;
+          }
+        }
+        // Konkretes Jahr für diesen Wanderer abgefragt? (z.B. "Wie viele Biere hat Frank 2017 getrunken?")
+        else if (targetYear !== null) {
+          const yearEntry = entries.find(e => e.jahr === targetYear);
+          if (yearEntry) {
+            answer = `🍺 **${matchedWanderer.name}** hat im Jahr **${targetYear}** genau **${yearEntry.biere} Biere** getrunken!`;
+          } else {
+            answer = `ℹ️ **${matchedWanderer.name}** hat im Jahr **${targetYear}** an keiner Bierwanderung teilgenommen (oder 0 Biere verzeichnet).`;
+          }
+        }
+        // Jahr mit den meisten Bieren für diesen Wanderer
+        else if (entries.length > 0 && (q.includes('jahr') || q.includes('wann') || q.includes('meist') || q.includes('höchst') || q.includes('rekord') || q.includes('beste') || q.includes('spitz'))) {
+          const maxBeers = entries[0].biere;
+          const peakEntries = entries.filter(e => e.biere === maxBeers);
+          const peakYears = peakEntries.map(e => e.jahr);
+
+          if (peakYears.length === 1) {
+            answer = `🏆 **${matchedWanderer.name}** hat im Jahr **${peakYears[0]}** mit **${maxBeers} Bieren** seine persönliche Höchstleistung erzielt! 🍺⚡\n\n` +
+              `📊 Seine Top-Jahre im Überblick:\n` +
+              entries.slice(0, 4).map((e, idx) => `• ${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'} Jahr **${e.jahr}**: ${e.biere} Biere`).join('\n');
+          } else {
+            answer = `🏆 **${matchedWanderer.name}** hat seinen Höchstwert von **${maxBeers} Bieren** in den Jahren **${peakYears.join(' und ')}** erzielt! 🍺⚡\n\n` +
+              `📊 Seine Top-Jahre im Überblick:\n` +
+              entries.slice(0, 4).map((e, idx) => `• ${idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'} Jahr **${e.jahr}**: ${e.biere} Biere`).join('\n');
+          }
+        } else {
+          const topYears = entries.length > 0 
+            ? entries.slice(0, 3).map(e => `${e.jahr} (${e.biere}🍺)`).join(', ')
+            : 'keine';
+          const peakText = entries.length > 0
+            ? `${entries[0].biere} Biere (im Jahr ${entries[0].jahr})`
+            : '0 Biere';
+          const avgText = st && st.count > 0 ? `${(st.total / st.count).toFixed(2)} Biere` : '0';
+
+          answer = `👤 **Wanderer ${matchedWanderer.name}:**\n` +
+            `• Gesamt-Biere: **${st ? st.total : 0} Biere** 🍺\n` +
+            `• Teilnahmen: **${st ? st.count : 0} Bierwanderungen**\n` +
+            `• Durchschnitt pro Wanderung: **${avgText}**\n` +
+            `• Persönlicher Jahresrekord: **${peakText}**\n` +
+            `• Beste Jahre: ${topYears}\n` +
+            `• Ausweisnummer: ${matchedWanderer.ausweis || 'k. A.'}`;
+        }
+      }
+      // 4. Rote Laterne (wenigste getrunkene Biere in einem Jahr)
+      else if (q.includes('rote laterne') || q.includes('roten laterne') || q.includes('laterne') || (q.includes('wenigst') && (q.includes('bier') || q.includes('getrunken') || q.includes('teilnehmer') || q.includes('wer')))) {
+        const yearsWithBeers = [...new Set(KONSUM.map(k => k.jahr))].sort((a,b) => a - b);
+        if (targetYear && yearsWithBeers.includes(targetYear)) {
+          const list = KONSUM.filter(k => k.jahr === targetYear).sort((a,b) => a.biere - b.biere);
+          const minBeers = list[0].biere;
+          const losers = list.filter(k => k.biere === minBeers).map(k => wandererMap.get(k.wid).name);
+          answer = `🏮 **Rote Laterne ${targetYear}:**\n\n` +
+            `Die Rote Laterne für den geringsten Bierkonsum im Jahr **${targetYear}** ging an:\n` +
+            `• **${losers.join(' und ')}** mit nur **${minBeers} Bier${minBeers === 1 ? '' : 'en'}**! 🍺\n\n` +
+            `📊 Zum Vergleich: Bierkönig im selben Jahr war **${wandererMap.get(list[list.length - 1].wid).name}** mit **${list[list.length - 1].biere} Bieren**!`;
+        } else {
+          // Allzeit-Tiefstwerte
+          const posEntries = KONSUM.filter(k => k.biere > 0).sort((a,b) => a.biere - b.biere);
+          const minPos = posEntries[0].biere;
+          const minPosEntries = posEntries.filter(k => k.biere === minPos);
+
+          answer = `🏮 **Die Rote Laterne der Bierwanderung:**\n\n` +
+            `Die Rote Laterne bekommt traditionell der Teilnehmer, der in einem Jahr die **wenigsten Biere** getrunken hat! 🏮😅\n\n` +
+            `📌 **Absoluter Negativrekord aller Zeiten:**\n` +
+            minPosEntries.map(e => `• 🏮 **${wandererMap.get(e.wid).name}** im Jahr **${e.jahr}** mit nur **${e.biere} Bier**`).join('\n') +
+            `\n\n🏮 **Die Roten Laternen der letzten Jahre:**\n` +
+            `• 2026: **Konrad** (3 Biere)\n` +
+            `• 2025: **Konrad** (4 Biere)\n` +
+            `• 2024: **Konrad** (6 Biere)\n` +
+            `• 2023: **Rico** und **Nils** (je 11 Biere)\n` +
+            `• 2022: **Rico** (9 Biere)\n` +
+            `• 2021: **Andre** (5 Biere)\n\n` +
+            `💡 *Tipp: Du kannst auch nach einem bestimmten Jahr fragen, z. B. „Wer bekam die Rote Laterne 2025?“.*`;
+        }
+      }
+      // 5. Jahr mit den meisten Teilnehmern
+      else if ((q.includes('teilnehmer') || q.includes('wanderer') || q.includes('mitwanderer') || q.includes('leute') || q.includes('personen')) && (q.includes('jahr') || q.includes('wann') || q.includes('welchem') || q.includes('rekord') || q.includes('meist') || q.includes('spitz') || q.includes('höchst'))) {
+        const participantMap = {};
+        KONSUM.forEach(k => {
+          participantMap[k.jahr] = (participantMap[k.jahr] || 0) + 1;
+        });
+        const sortedParticipantYears = Object.entries(participantMap).sort((a, b) => b[1] - a[1]);
+        const topPYear = sortedParticipantYears[0];
+        const secondPYear = sortedParticipantYears[1];
+        const thirdPYear = sortedParticipantYears[2];
+
+        answer = `👥 **Jahr mit den meisten Teilnehmern:**\n\n` +
+          `Das Rekordjahr mit den meisten Teilnehmern ist **${topPYear[0]}** mit stolzen **${topPYear[1]} Wanderern**! 🥾🎉\n\n` +
+          `📊 **Die Top 3 Jahre mit der höchsten Teilnehmerzahl:**\n` +
+          `• 🥇 Platz 1: **${topPYear[0]}** mit **${topPYear[1]} Teilnehmern**\n` +
+          `• 🥈 Platz 2: **${secondPYear[0]}** mit **${secondPYear[1]} Teilnehmern**\n` +
+          `• 🥉 Platz 3: **${thirdPYear[0]}** und **2026** mit je **14 Teilnehmern**\n\n` +
+          `💡 Im Jahr ${topPYear[0]} wurden von diesen ${topPYear[1]} Wanderern insgesamt 187 Biere getrunken!`;
+      }
+      // 4. Erste Bierwanderung (kleinste Jahreszahl aller Bierwanderungen)
+      else if (q.includes('erste') && (q.includes('wanderung') || q.includes('bierwanderung') || q.includes('jahr') || q.includes('wann'))) {
+        const minYear = Math.min(...KONSUM.map(k => k.jahr));
+        const maxYear = Math.max(...KONSUM.map(k => k.jahr));
+        const firstYearHikes = KONSUM.filter(k => k.jahr === minYear);
+        const participantCount = firstYearHikes.length;
+
+        answer = `🥾 **Die allererste Bierwanderung fand im Jahr ${minYear} statt!**\n\n` +
+          `• 🗓️ Startjahr: **${minYear}** (kleinste Jahreszahl der Historie)\n` +
+          `• 📜 Zeitraum aller Wanderungen: **${minYear} bis ${maxYear}** (22 Jahre)\n` +
+          `• 👥 Teilnehmer bei der Premiere ${minYear}: ${participantCount} Wanderer (darunter Volker, Glassi, Frank, Kubi, Mike L., Daniel, Mirko und Sören)`;
+      }
+      // 5. Welches Jahr hatte die meisten Biere (Jahr mit Rekord-Konsum aller Teilnehmer)
+      else if (q.includes('jahr') && (q.includes('meisten biere') || q.includes('meist getrunken') || q.includes('rekordjahr') || q.includes('spitzenjahr') || q.includes('höchste konsum') || q.includes('meiste bier getrunken'))) {
+        const yearlyMap = {};
+        KONSUM.forEach(k => {
+          yearlyMap[k.jahr] = (yearlyMap[k.jahr] || 0) + k.biere;
+        });
+        const sortedYears = Object.entries(yearlyMap).sort((a, b) => b[1] - a[1]);
+        const topYear = sortedYears[0];
+        const secondYear = sortedYears[1];
+        const thirdYear = sortedYears[2];
+
+        answer = `🍻 Rekordjahr mit den meisten getrunkenen Bieren:\n\n` +
+          `Das absolute Spitzenjahr ist **${topYear[0]}** mit insgesamt **${topYear[1]} Bieren** aller Wanderer zusammen! 🏆🔥\n\n` +
+          `📊 Die Top 3 Jahre mit dem höchsten Gesamt-Konsum:\n` +
+          `• 🥇 Platz 1: **${topYear[0]}** mit ${topYear[1]} Bieren\n` +
+          `• 🥈 Platz 2: **${secondYear[0]}** mit ${secondYear[1]} Bieren\n` +
+          `• 🥉 Platz 3: **${thirdYear[0]}** mit ${thirdYear[1]} Bieren\n\n` +
+          `💡 Zum Vergleich: Den höchsten Einzelkonsum eines einzelnen Wanderers in einem Jahr hält Manni mit 24 Bieren (2019 und 2025)!`;
+      }
+      // 3. Königlicher Schluckspecht (wer insgesamt die meisten Biere hat)
+      else if (q.includes('schluckspecht') || q.includes('ewig') || q.includes('aller zeiten') || (q.includes('wer') && (q.includes('meisten biere') || q.includes('insgesamt')) && !targetYear && !q.includes('titel') && !q.includes('könig'))) {
+        const king = wandererStats[0];
+        answer = `🦅 Königlicher Schluckspecht:\n${king.wanderer.name} ist der königliche Schluckspecht mit insgesamt ${king.total} Bieren aus ${king.count} Bierwanderungen! 🏆\n\nTop 5 aller Zeiten:\n` +
+          wandererStats.slice(0, 5).map((s, i) => `${['🥇','🥈','🥉','4.','5.'][i]} ${s.wanderer.name}: ${s.total} Biere (${s.count} Wanderungen)`).join('\n');
+      }
+      // 4. Meiste Bierkönig-Titel (wer am häufigsten Bierkönig geworden ist)
+      else if (q.includes('titel') || (q.includes('meist') && q.includes('könig')) || q.includes('häufigst') || q.includes('öfter könig') || q.includes('rekordsieger')) {
+        answer = `👑 Die meisten Bierkönig-Titel aller Bierwanderungen:\n\n` +
+          `Den Rekord mit jeweils 7 Titeln teilen sich zwei Wanderer:\n` +
+          `• 🥇 Clemens: 7x Bierkönig (2009, 2011, 2012, 2014, 2020, 2024, 2026)\n` +
+          `• 🥇 Manni: 7x Bierkönig (2015, 2016, 2017, 2018, 2019, 2021, 2025)\n\n` +
+          `Dahinter folgt:\n` +
+          `• 🥉 Mirko: 6x Bierkönig (2008, 2010, 2020, 2022, 2023, 2024)\n` +
+          `• 4. Glassi: 2x Bierkönig (2007, 2013)\n\n` +
+          `🍻 Clemens und Manni sind somit die unangefochtenen Rekord-Bierkönige der Bierwanderung!`;
+      }
+      // 5. Konkretes Jahr abgefragt (Bierkönig oder Rangliste für dieses Jahr)
+      else if (targetYear !== null) {
+        const yearData = KONSUM.filter(k => k.jahr === targetYear).sort((a, b) => b.biere - a.biere);
+        if (yearData.length === 0) {
+          answer = `Für das Jahr ${targetYear} liegen in der Datenbank leider keine Daten vor (Daten vorhanden für die Jahre 2005 bis 2026).`;
+        } else {
+          const winner = wandererMap.get(yearData[0].wid);
+          const totalInYear = yearData.reduce((sum, e) => sum + e.biere, 0);
+          answer = `👑 Bierkönig ${targetYear}:\n${winner.name} war der Bierkönig im Jahr ${targetYear} mit ${yearData[0].biere} Bieren! 🍻\n\nRangliste ${targetYear} (${yearData.length} Wanderer, ${totalInYear} Biere gesamt):\n` +
+            yearData.slice(0, 5).map((y, i) => `${['🥇','🥈','🥉','4.','5.'][i]} ${wandererMap.get(y.wid).name}: ${y.biere} Biere`).join('\n');
+        }
+      }
+      // 6. Bierkönig ohne Jahresangabe -> Fragt oder zeigt die letzten Bierkönige
+      else if (q.includes('bierkönig') || q.includes('könig')) {
+        const k2026 = KONSUM.filter(k => k.jahr === 2026).sort((a,b) => b.biere - a.biere)[0];
+        const k2025 = KONSUM.filter(k => k.jahr === 2025).sort((a,b) => b.biere - a.biere)[0];
+        const k2024 = KONSUM.filter(k => k.jahr === 2024).sort((a,b) => b.biere - a.biere)[0];
+        answer = `👑 Bierkönige der letzten Jahre:\n• 2026: ${wandererMap.get(k2026.wid).name} (${k2026.biere} Biere)\n• 2025: ${wandererMap.get(k2025.wid).name} (${k2025.biere} Biere)\n• 2024: ${wandererMap.get(k2024.wid).name} (${k2024.biere} Biere)\n\nTipp: Nenne ein bestimmtes Jahr (z.B. "Wer war Bierkönig 2019?"), um den jeweiligen Sieger zu sehen!`;
+      }
+      // 9. Meiste Wanderungen / Teilnahmen
+      else if (q.includes('wanderung') && (q.includes('meiste') || q.includes('oft') || q.includes('häufig') || q.includes('teilnahme'))) {
+        const sortedByCount = [...wandererStats].sort((a, b) => b.count - a.count);
+        answer = `🥾 Meiste Bierwanderungen:\n• 1. ${sortedByCount[0].wanderer.name}: ${sortedByCount[0].count} Wanderungen (${sortedByCount[0].total} Biere)\n• 2. ${sortedByCount[1].wanderer.name}: ${sortedByCount[1].count} Wanderungen (${sortedByCount[1].total} Biere)\n• 3. ${sortedByCount[2].wanderer.name}: ${sortedByCount[2].count} Wanderungen (${sortedByCount[2].total} Biere)`;
+      }
+      // 10. Datum / Wann nächste Bierwanderung (nur wenn kein Teilnehmer abgefragt wurde)
+      else if ((q.includes('wann') || q.includes('termin') || q.includes('nächste') || q.includes('2027')) && (q.includes('bierwanderung') || q.includes('wanderung') || q.includes('nächste') || q.includes('termin') || q.includes('wieder'))) {
+        answer = `📅 Nächste Bierwanderung:\nMontag, 13. September 2027 um 10:00 Uhr! 🥾🍻\nDer Countdown läuft auf der Startseite.`;
+      }
+      // 11. Allgemeine Hilfe / Übersicht
+      else {
+        const totalBeers = KONSUM.reduce((sum, e) => sum + e.biere, 0);
+        answer = `🍻 Bierwanderung-Assistent:\nIch kenne alle Daten aus 2005–2026 (${totalBeers} Biere, 33 Wanderer).\n\nDu kannst mich z. B. fragen:\n• "Wieviel Bier hat Andre im Durchschnitt bei seinen Teilnahmen getrunken?"\n• "In welchem Jahr gab es die meisten Teilnehmer?"\n• "Wer bekam die Rote Laterne?"\n• "In welchem Jahr hat Frank die meisten Biere getrunken?"\n• "Wann war die erste Bierwanderung?"\n• "Gesamtbieranzahl aller Wanderungen"\n• "In welchem Jahr wurden die meisten Biere getrunken?"\n• "Wer hat die meisten Bierkönig Titel?"\n• "Wer ist der königliche Schluckspecht?"`;
+      }
+
+      return { answer };
+    }
+
+    /* ==========================================================
+       AUTHENTICATION & GREETING LOGIC
+       ========================================================== */
+    function focusPassword() {
+      document.getElementById('login-pass').focus();
+    }
+
+    function togglePasswordVisibility() {
+      const passInput = document.getElementById('login-pass');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+      } else {
+        passInput.type = 'password';
+      }
+    }
+
+    function handleLoginSubmit() {
+      const nameInput = document.getElementById('login-name').value.trim();
+      const passInput = document.getElementById('login-pass').value.trim();
+      const errorBox = document.getElementById('login-error');
+
+      if (!nameInput || !passInput) {
+        errorBox.textContent = '⚠️ Bitte gib sowohl deinen Benutzernamen als auch dein Passwort ein!';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      // 1. Suche nach dem Namen in der Datenbank (case-insensitive)
+      const matchedUserByName = WANDERER.find(w => w.name.trim().toLowerCase() === nameInput.toLowerCase());
+
+      if (!matchedUserByName) {
+        errorBox.textContent = '❌ Ungültige Anmeldedaten. Bitte überprüfe Benutzername und Passwort.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      // 2. Passwortprüfung: Ausweisnummer muss exakt übereinstimmen
+      const expectedPass = (matchedUserByName.ausweis || '').trim().toLowerCase();
+      const enteredPass = passInput.toLowerCase();
+
+      if (expectedPass !== enteredPass) {
+        errorBox.textContent = '❌ Ungültige Anmeldedaten. Bitte überprüfe Benutzername und Passwort.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      // Erfolgreich angemeldet!
+      errorBox.style.display = 'none';
+      loginSuccess(matchedUserByName, true);
+    }
+
+    function loginSuccess(wanderer, isFirstLogin = false) {
+      // Kein permanentes Speichern im localStorage, damit bei Aufruf der Website immer neu abgefragt wird
+      try {
+        localStorage.removeItem('bw_logged_user_id');
+      } catch (e) {}
+
+      // Speichert, wer (nur Name des Bierwanderers) sich in die Website eingeloggt hat
+      recordWandererLogin(wanderer.name);
+
+      // UI aktualisieren
+      applyLoggedInUser(wanderer);
+
+      // Login-Overlay schließen
+      document.getElementById('login-overlay').classList.add('hidden');
+
+      // Nutzer herzlich begrüßen
+      if (isFirstLogin) {
+        showGreetingModal(wanderer);
+      }
+    }
+
+    function showGreetingModal(wanderer) {
+      const st = wandererStats.find(s => s.wanderer.id === wanderer.id);
+      const totalBeers = st ? st.total : 0;
+      const countHikes = st ? st.count : 0;
+      const maxBeers = st ? st.maxBeers : 0;
+
+      document.getElementById('greeting-name').textContent = `Herzlich willkommen, ${wanderer.name}! 🍻`;
+      document.getElementById('greeting-sub').textContent = `Erfolgreich angemeldet. Prost auf die Bierwanderung!`;
+      document.getElementById('greeting-stat-beers').textContent = totalBeers;
+      document.getElementById('greeting-stat-hikes').textContent = countHikes;
+      document.getElementById('greeting-stat-record').textContent = maxBeers;
+
+      document.getElementById('greeting-overlay').classList.remove('hidden');
+    }
+
+    function closeGreetingModal() {
+      document.getElementById('greeting-overlay').classList.add('hidden');
+    }
+
+    let currentLoggedInUser = null;
+
+    function applyLoggedInUser(wanderer) {
+      currentLoggedInUser = wanderer;
+      const st = wandererStats.find(s => s.wanderer.id === wanderer.id);
+      const totalBeers = st ? st.total : 0;
+      const countHikes = st ? st.count : 0;
+
+      // Header Badge
+      document.getElementById('user-display-name').textContent = wanderer.name;
+      document.getElementById('user-header-info').style.display = 'flex';
+
+      // Countdown Welcome Banner
+      const banner = document.getElementById('welcome-user-banner');
+      banner.style.display = 'flex';
+      document.getElementById('welcome-banner-title').textContent = `Grüß dich, ${wanderer.name}! 🍻`;
+      document.getElementById('welcome-banner-sub').textContent = `${totalBeers} Biere in ${countHikes} Wanderungen • Bereit für 2027`;
+
+      // Konrad-spezifische Sichtbarkeit
+      updateKonradVisibility();
+    }
+
+    /* FEEDBACK & VERBESSERN LOGIK (NUR KONRAD KANN DIESE EINSEHEN) */
+    const FEEDBACK_STORAGE_KEY = 'bierki_feedback_improvements';
+
+    function getStoredImprovements() {
+      try {
+        const raw = localStorage.getItem(FEEDBACK_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        console.error('Fehler beim Laden der Verbesserungen:', e);
+        return [];
+      }
+    }
+
+    function saveImprovementsList(list) {
+      try {
+        localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {
+        console.error('Fehler beim Speichern der Verbesserungen:', e);
+      }
+      updateKonradBadgeCount();
+    }
+
+    function openImproveModal(prefillQuestion = '', prefillAnswer = '') {
+      const qInput = document.getElementById('improve-question');
+      const aInput = document.getElementById('improve-ai-answer');
+      const cInput = document.getElementById('improve-user-correction');
+      const msgBox = document.getElementById('improve-msg');
+
+      if (msgBox) {
+        msgBox.style.display = 'none';
+        msgBox.textContent = '';
+      }
+
+      // Falls keine Werte übergeben, nimm die zuletzt getätigte Frage/Antwort
+      const finalQ = prefillQuestion || (document.getElementById('chat-input') ? document.getElementById('chat-input').value.trim() : '') || lastUserQuestion || '';
+      const finalA = prefillAnswer || lastBotAnswer || '';
+
+      if (qInput) qInput.value = finalQ;
+      if (aInput) aInput.value = finalA;
+      if (cInput) {
+        cInput.value = '';
+        setTimeout(() => cInput.focus(), 150);
+      }
+
+      document.getElementById('improve-modal').classList.remove('hidden');
+    }
+
+    function closeImproveModal() {
+      document.getElementById('improve-modal').classList.add('hidden');
+    }
+
+    function saveImprovement() {
+      const qInput = document.getElementById('improve-question');
+      const aInput = document.getElementById('improve-ai-answer');
+      const cInput = document.getElementById('improve-user-correction');
+      const msgBox = document.getElementById('improve-msg');
+
+      const question = (qInput ? qInput.value : '').trim();
+      const aiAnswer = (aInput ? aInput.value : '').trim();
+      const correction = (cInput ? cInput.value : '').trim();
+
+      if (!question && !aiAnswer && !correction) {
+        if (msgBox) {
+          msgBox.style.display = 'block';
+          msgBox.style.background = 'rgba(239, 68, 68, 0.2)';
+          msgBox.style.border = '1px solid rgba(239, 68, 68, 0.5)';
+          msgBox.style.color = '#fca5a5';
+          msgBox.textContent = 'Bitte gib mindestens eine Frage oder Antwort ein.';
+        }
+        return;
+      }
+
+      const senderName = currentLoggedInUser ? currentLoggedInUser.name : 'Gast/Wanderer';
+      const newEntry = {
+        id: 'fb-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+        timestamp: new Date().toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        user: senderName,
+        question: question || '(Keine Frage angegeben)',
+        aiAnswer: aiAnswer || '(Keine vorherige KI-Antwort angegeben)',
+        correction: correction || ''
+      };
+
+      const list = getStoredImprovements();
+      list.unshift(newEntry);
+      saveImprovementsList(list);
+
+      if (msgBox) {
+        msgBox.style.display = 'block';
+        msgBox.style.background = 'rgba(74, 222, 128, 0.2)';
+        msgBox.style.border = '1px solid rgba(74, 222, 128, 0.5)';
+        msgBox.style.color = '#86efac';
+        msgBox.textContent = '✅ Vielen Dank! Die Frage und Antwort wurden gespeichert und an Konrad übermittelt.';
+      }
+
+      setTimeout(() => {
+        closeImproveModal();
+      }, 1300);
+    }
+
+    /* =========================================================
+       LOGIN-PROTOKOLLIERUNG (NUR FÜR KONRAD SICHTBAR)
+       ========================================================= */
+    const LOGIN_LOG_STORAGE_KEY = 'bw_logged_in_wanderers_log';
+
+    function getStoredLogins() {
+      try {
+        const raw = localStorage.getItem(LOGIN_LOG_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        console.error('Fehler beim Laden der Login-Historie:', e);
+        return [];
+      }
+    }
+
+    function recordWandererLogin(wandererName) {
+      if (!wandererName) return;
+      try {
+        const logins = getStoredLogins();
+        const newEntry = {
+          id: 'login-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4),
+          name: String(wandererName).trim(), // Nur Name des Bierwanderers
+          timestamp: new Date().toLocaleString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          })
+        };
+        logins.unshift(newEntry);
+        localStorage.setItem(LOGIN_LOG_STORAGE_KEY, JSON.stringify(logins));
+      } catch (e) {
+        console.error('Fehler beim Speichern des Logins:', e);
+      }
+      if (typeof updateKonradBadgeCount === 'function') {
+        updateKonradBadgeCount();
+      }
+    }
+
+    function isKonradLoggedIn() {
+      return currentLoggedInUser && currentLoggedInUser.name && currentLoggedInUser.name.trim().toLowerCase() === 'konrad';
+    }
+
+    let activeKonradTab = 'logins';
+
+    function switchKonradTab(tab) {
+      if (!isKonradLoggedIn()) return;
+      activeKonradTab = tab;
+
+      const btnLogins = document.getElementById('konrad-tab-btn-logins');
+      const btnFeedback = document.getElementById('konrad-tab-btn-feedback');
+      const viewLogins = document.getElementById('konrad-view-logins');
+      const viewFeedback = document.getElementById('konrad-view-feedback');
+      const clearBtn = document.getElementById('konrad-btn-clear');
+
+      if (tab === 'logins') {
+        if (btnLogins) {
+          btnLogins.style.borderColor = 'var(--primary)';
+          btnLogins.style.background = 'rgba(255,184,0,0.2)';
+          btnLogins.style.color = '#fff';
+          btnLogins.style.fontWeight = '700';
+        }
+        if (btnFeedback) {
+          btnFeedback.style.borderColor = 'var(--border-color)';
+          btnFeedback.style.background = 'transparent';
+          btnFeedback.style.color = 'var(--text-muted)';
+          btnFeedback.style.fontWeight = '500';
+        }
+        if (viewLogins) viewLogins.style.display = 'flex';
+        if (viewFeedback) viewFeedback.style.display = 'none';
+        if (clearBtn) clearBtn.textContent = '🗑️ Logins leeren';
+        renderKonradLoginsList();
+      } else {
+        if (btnFeedback) {
+          btnFeedback.style.borderColor = 'var(--primary)';
+          btnFeedback.style.background = 'rgba(255,184,0,0.2)';
+          btnFeedback.style.color = '#fff';
+          btnFeedback.style.fontWeight = '700';
+        }
+        if (btnLogins) {
+          btnLogins.style.borderColor = 'var(--border-color)';
+          btnLogins.style.background = 'transparent';
+          btnLogins.style.color = 'var(--text-muted)';
+          btnLogins.style.fontWeight = '500';
+        }
+        if (viewFeedback) viewFeedback.style.display = 'flex';
+        if (viewLogins) viewLogins.style.display = 'none';
+        if (clearBtn) clearBtn.textContent = '🗑️ Feedback leeren';
+        renderKonradImprovementsList();
+      }
+    }
+
+    function updateKonradVisibility() {
+      const isKonrad = isKonradLoggedIn();
+      const headerBadge = document.getElementById('konrad-header-badge');
+      const tabBadge = document.getElementById('konrad-ai-tab-badge');
+      const dropzone = document.getElementById('bw-dropzone');
+
+      if (dropzone) {
+        dropzone.style.display = isKonrad ? 'flex' : 'none';
+      }
+
+      if (isKonrad) {
+        if (headerBadge) headerBadge.style.display = 'inline-flex';
+        if (tabBadge) tabBadge.style.display = 'inline-flex';
+        updateKonradBadgeCount();
+      } else {
+        if (headerBadge) headerBadge.style.display = 'none';
+        if (tabBadge) tabBadge.style.display = 'none';
+        // Falls Konrad-Modal offen war und der Nutzer ist nicht Konrad, sofort schließen
+        const modal = document.getElementById('konrad-modal');
+        if (modal) modal.classList.add('hidden');
+      }
+
+      // Re-render Chronik to toggle Konrad-exclusive photo buttons (Upload/Reset)
+      if (typeof renderBierwanderungen === 'function' && document.getElementById('bw-years-container')) {
+        renderBierwanderungen(currentBwFilter);
+      }
+    }
+
+    function updateKonradBadgeCount() {
+      const logins = getStoredLogins();
+      const feedback = getStoredImprovements();
+      const b1 = document.getElementById('konrad-badge-count');
+      const b2 = document.getElementById('konrad-ai-count');
+      const tLogins = document.getElementById('konrad-tab-logins-count');
+      const tFeedback = document.getElementById('konrad-tab-feedback-count');
+
+      if (tLogins) tLogins.textContent = logins.length;
+      if (tFeedback) tFeedback.textContent = feedback.length;
+      if (b1) b1.textContent = `${logins.length} Logins`;
+      if (b2) b2.textContent = `${logins.length} Logins`;
+    }
+
+    function openKonradModal() {
+      // Strikte Autorisierungsprüfung: Nur der Nutzer Konrad darf diese einsehen
+      if (!isKonradLoggedIn()) {
+        alert('Zugriff verweigert: Nur der Nutzer Konrad kann diese Daten einsehen.');
+        return;
+      }
+
+      switchKonradTab(activeKonradTab || 'logins');
+      document.getElementById('konrad-modal').classList.remove('hidden');
+    }
+
+    function closeKonradModal() {
+      document.getElementById('konrad-modal').classList.add('hidden');
+    }
+
+    function renderKonradLoginsList() {
+      if (!isKonradLoggedIn()) return;
+      const listContainer = document.getElementById('konrad-logins-list');
+      const summaryContainer = document.getElementById('konrad-logins-summary');
+      const countLabel = document.getElementById('konrad-item-count');
+      if (!listContainer) return;
+
+      const logins = getStoredLogins();
+      const uniqueNames = [...new Set(logins.map(l => l.name))];
+
+      if (countLabel && activeKonradTab === 'logins') {
+        countLabel.textContent = `${logins.length} ${logins.length === 1 ? 'Login erfasst' : 'Logins erfasst'}`;
+      }
+
+      if (summaryContainer) {
+        if (logins.length === 0) {
+          summaryContainer.innerHTML = '👥 Noch keine Logins protokolliert.';
+        } else {
+          // Zählung pro Wanderer
+          const counts = {};
+          logins.forEach(l => { counts[l.name] = (counts[l.name] || 0) + 1; });
+          const topList = Object.entries(counts)
+            .sort((a, b) => b[1] - a[1])
+            .map(([n, c]) => `<strong>${escapeHtml(n)}</strong> (${c}×)`)
+            .join(', ');
+
+          summaryContainer.innerHTML = `
+            <div style="font-weight: 700; color: #fff; margin-bottom: 2px;">
+              📊 ${logins.length} Gesamt-Logins von ${uniqueNames.length} ${uniqueNames.length === 1 ? 'Wanderer' : 'verschiedenen Wanderern'}
+            </div>
+            <div style="font-size: 0.74rem; color: #fde047;">
+              Häufigkeit: ${topList}
+            </div>
+          `;
+        }
+      }
+
+      if (logins.length === 0) {
+        listContainer.innerHTML = `
+          <div style="text-align: center; padding: 30px 10px; color: var(--text-muted);">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">🚪🍺</div>
+            <div style="font-weight: 700; color: #fef08a; margin-bottom: 4px;">Keine Anmeldungen protokolliert</div>
+            <div style="font-size: 0.8rem;">Sobald sich ein Bierwanderer anmeldet, wird sein Name und der genaue Zeitpunkt hier für dich erfasst.</div>
+          </div>
+        `;
+        return;
+      }
+
+      listContainer.innerHTML = logins.map((item, index) => {
+        return `
+          <div style="background: rgba(18, 19, 22, 0.75); border: 1px solid rgba(255, 184, 0, 0.28); border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.15rem;">👤</span>
+              <div>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #fff; letter-spacing: 0.3px;">
+                  ${escapeHtml(item.name)}
+                </div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">
+                  Eingeloggt am: <span style="color: #cbd5e1;">${escapeHtml(item.timestamp)}</span>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.7rem; color: #fef08a; background: rgba(255, 184, 0, 0.12); padding: 2px 8px; border-radius: 9999px; border: 1px solid rgba(255, 184, 0, 0.3);">
+                #${logins.length - index}
+              </span>
+              <button type="button" style="background: none; border: none; color: #ef4444; font-size: 0.85rem; cursor: pointer; padding: 2px 6px;" title="Diesen Eintrag löschen" onclick="deleteLoginEntry('${item.id}')">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteLoginEntry(id) {
+      if (!isKonradLoggedIn()) return;
+      let logins = getStoredLogins();
+      logins = logins.filter(entry => entry.id !== id);
+      try {
+        localStorage.setItem(LOGIN_LOG_STORAGE_KEY, JSON.stringify(logins));
+      } catch (e) {}
+      updateKonradBadgeCount();
+      renderKonradLoginsList();
+    }
+
+    function clearAllLogins() {
+      if (!isKonradLoggedIn()) return;
+      if (!confirm('Möchtest du wirklich alle aufgezeichneten Logins löschen?')) {
+        return;
+      }
+      try {
+        localStorage.setItem(LOGIN_LOG_STORAGE_KEY, JSON.stringify([]));
+      } catch (e) {}
+      updateKonradBadgeCount();
+      renderKonradLoginsList();
+    }
+
+    function handleKonradClearCurrentTab() {
+      if (!isKonradLoggedIn()) return;
+      if (activeKonradTab === 'logins') {
+        clearAllLogins();
+      } else {
+        clearAllImprovements();
+      }
+    }
+
+    function renderKonradImprovementsList() {
+      const listContainer = document.getElementById('konrad-items-list');
+      const countLabel = document.getElementById('konrad-item-count');
+      if (!listContainer) return;
+
+      const items = getStoredImprovements();
+      if (countLabel && activeKonradTab === 'feedback') {
+        countLabel.textContent = `${items.length} ${items.length === 1 ? 'gespeicherte Rückmeldung' : 'gespeicherte Rückmeldungen'}`;
+      }
+
+      if (items.length === 0) {
+        listContainer.innerHTML = `
+          <div style="text-align: center; padding: 30px 10px; color: var(--text-muted);">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">✨🍻</div>
+            <div style="font-weight: 700; color: #fef08a; margin-bottom: 4px;">Keine gemeldeten Fragen vorhanden</div>
+            <div style="font-size: 0.8rem;">Wenn Nutzer bei ungenauen Antworten auf "Verbessern" klicken, werden Frage und Antwort hier für dich aufgeführt.</div>
+          </div>
+        `;
+        return;
+      }
+
+      listContainer.innerHTML = items.map((item, index) => {
+        const hasCorrection = item.correction && item.correction.trim();
+        return `
+          <div style="background: rgba(18, 19, 22, 0.7); border: 1px solid rgba(255, 184, 0, 0.3); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 6px;">
+              <span style="font-size: 0.75rem; font-weight: 700; color: #fef08a;">
+                #${items.length - index} • Eingereicht von ${escapeHtml(item.user || 'Wanderer')}
+              </span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 0.7rem; color: var(--text-muted);">${escapeHtml(item.timestamp || '')}</span>
+                <button type="button" style="background: none; border: none; color: #ef4444; font-size: 0.8rem; cursor: pointer; padding: 2px 4px;" title="Diesen Eintrag löschen" onclick="deleteImprovement('${item.id}')">✕</button>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--primary); font-weight: 800; margin-bottom: 2px;">❓ Gestellte Frage:</div>
+              <div style="font-size: 0.88rem; font-weight: 700; color: #fff; line-height: 1.35; background: rgba(0,0,0,0.25); padding: 6px 10px; border-radius: 8px;">
+                ${escapeHtml(item.question)}
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.72rem; text-transform: uppercase; color: #94a3b8; font-weight: 800; margin-bottom: 2px;">🤖 Gegebene / Vorherige KI-Antwort:</div>
+              <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.35; background: rgba(0,0,0,0.2); padding: 6px 10px; border-radius: 8px; white-space: pre-wrap;">
+                ${escapeHtml(item.aiAnswer)}
+              </div>
+            </div>
+
+            ${hasCorrection ? `
+              <div>
+                <div style="font-size: 0.72rem; text-transform: uppercase; color: #4ade80; font-weight: 800; margin-bottom: 2px;">💡 Korrektur / Richtige Antwort des Nutzers:</div>
+                <div style="font-size: 0.84rem; color: #bbf7d0; line-height: 1.35; background: rgba(74, 222, 128, 0.08); border: 1px solid rgba(74, 222, 128, 0.25); padding: 6px 10px; border-radius: 8px; white-space: pre-wrap;">
+                  ${escapeHtml(item.correction)}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function deleteImprovement(id) {
+      if (!isKonradLoggedIn()) return;
+      let list = getStoredImprovements();
+      list = list.filter(item => item.id !== id);
+      saveImprovementsList(list);
+      renderKonradImprovementsList();
+    }
+
+    function clearAllImprovements() {
+      if (!isKonradLoggedIn()) return;
+      if (!confirm('Möchtest du wirklich alle gespeicherten Verbesserungen löschen?')) {
+        return;
+      }
+      saveImprovementsList([]);
+      renderKonradImprovementsList();
+    }
+
+    function selectIntroPrompt(promptText) {
+      closeIntroPromptModal();
+      sendPrompt(promptText);
+    }
+
+    function submitIntroPrompt() {
+      const inp = document.getElementById('intro-prompt-input');
+      const val = inp ? inp.value.trim() : '';
+      if (!val) return;
+      closeIntroPromptModal();
+      sendPrompt(val);
+    }
+
+    function closeIntroPromptModal() {
+      document.getElementById('ai-prompt-modal').classList.add('hidden');
+      const chatInput = document.getElementById('chat-input');
+      if (chatInput) chatInput.focus();
+    }
+
+    function handleLogout() {
+      try {
+        localStorage.removeItem('bw_logged_user_id');
+      } catch (e) {}
+      currentLoggedInUser = null;
+      updateKonradVisibility();
+      aiVisitedInSession = false;
+      document.getElementById('ai-prompt-modal').classList.add('hidden');
+      document.getElementById('improve-modal').classList.add('hidden');
+      document.getElementById('konrad-modal').classList.add('hidden');
+      document.getElementById('user-header-info').style.display = 'none';
+      document.getElementById('welcome-user-banner').style.display = 'none';
+      document.getElementById('login-name').value = '';
+      document.getElementById('login-pass').value = '';
+      document.getElementById('login-error').style.display = 'none';
+      document.getElementById('greeting-overlay').classList.add('hidden');
+      document.getElementById('login-overlay').classList.remove('hidden');
+      document.getElementById('login-name').focus();
+    }
+
+    function checkExistingAuth() {
+      // Bei Aufruf der Website immer neu abfragen:
+      try {
+        localStorage.removeItem('bw_logged_user_id');
+      } catch (e) {}
+      currentLoggedInUser = null;
+      updateKonradVisibility();
+      document.getElementById('login-overlay').classList.remove('hidden');
+      document.getElementById('login-name').value = '';
+      document.getElementById('login-pass').value = '';
+    }
+
+    function downloadCurrentSql() {
+      // Direkter Download der BW.sql Datei
+      const a = document.createElement('a');
+      a.href = 'BW.sql';
+      a.download = 'BW.sql';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function downloadCurrentApk() {
+      // Direkter Download der Android APK Datei
+      const a = document.createElement('a');
+      a.href = 'Bierwanderung.apk';
+      a.download = 'Bierwanderung.apk';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    /* ==========================================================
+       BIERWANDERUNGEN CHRONIK (2005 - 2026) LOGIK & DATEN
+       ========================================================== */
+    // Die Archivbilder liegen im öffentlichen Repository. Die direkten Raw-Links
+    // funktionieren sowohl auf GitHub Pages als auch beim lokalen Testen der Seite.
+    const GITHUB_IMAGE_BASE = 'https://raw.githubusercontent.com/Racingkonni/Bierwanderung/main/images/';
+    const archivePhotos = (year, filenames) => filenames.map((filename, index) => ({
+      file: GITHUB_IMAGE_BASE + year + '/' + encodeURIComponent(filename),
+      caption: `Bierwanderung ${year} · Foto ${index + 1} von ${filenames.length}`
+    }));
+    const groupPhoto = (filename, caption) => ({
+      // Lokaler Pfad für die Vorschau; beim Veröffentlichen greift der vorhandene
+      // Bild-Fallback auf images/<Dateiname> im GitHub-Archiv zurück.
+      file: `Gruppenbilder/${filename}`,
+      caption
+    });
+    const numberedArchive = (year, start, end, filename) => archivePhotos(year,
+      Array.from({ length: end - start + 1 }, (_, i) => filename(start + i))
+    );
+
+    const BIERWANDERUNGEN_META = {
+      2026: {
+        number: 22,
+        photos: [{ file: '2026.jpeg', caption: 'Gruppenbild 2026 vor der Restaurace (Dunkelgrüne Shirts)' }],
+        location: 'Restaurace mit blauen Holzläden & Holzgeländer',
+        shirts: 'Dunkelgrüne T-Shirts mit Emblem',
+        note: 'Clemens gewinnt mit 16 Bieren seinen 7. Bierkönig-Titel!'
+      },
+      2025: {
+        number: 21,
+        photos: [{ file: '2025.jpg', caption: 'Gruppenbild 2025 vor Hotel zur Post (Hellblaue Shirts & Medaillen)' }],
+        location: 'Hotel zur Post unter dem rot-weißen Fachwerkbogen',
+        shirts: 'Hellblaue T-Shirts & Goldmedaillen',
+        note: 'Teilnehmerrekord aller Zeiten: 18 Wanderer! Manni siegt mit 24 Bieren.'
+      },
+      2024: {
+        number: 20,
+        photos: [
+          { file: '2024.jpg', caption: 'Gruppenbild 2024 vor dem Blumenhaus (Dunkelgraue Shirts)' },
+          { file: '2024.jpeg', caption: 'Gruppenbild 2024 vor dem Blumenhaus (Dunkelgraue Shirts)' }
+        ],
+        location: 'Hausfassade mit leuchtend gelben Blumenkästen',
+        shirts: 'Dunkelgraue T-Shirts mit Brustlogo',
+        note: 'Doppelsieg: Clemens und Mirko teilen sich den Titel mit je 17 Bieren.'
+      },
+      2023: {
+        number: 19,
+        photos: [
+          { file: '2023.jpg', caption: 'Gruppenbild 2023 vor dem historischen Torbogen (Marineblaue Shirts)' }
+        ],
+        location: 'Historisches Tor mit rot-weißem Balkengatter & Bad Brambacher Biergarten',
+        shirts: 'Marineblaue T-Shirts mit Wappen',
+        note: 'Mirko sichert sich die Königswürde mit 18 Bieren.'
+      },
+      2022: {
+        number: 18,
+        photos: [{ file: '2022.jpeg', caption: 'Gruppenbild 2022 vor Holzstapel mit blauer Kugel-Laterne' }],
+        location: 'Rustikaler Holzstapel im Freien',
+        shirts: 'Anthrazit/Graue T-Shirts mit Zunftstab',
+        note: 'Mirko triumphiert mit 20 Bieren.'
+      },
+      2021: {
+        number: 17,
+        photos: [{ file: '2021.jpeg', caption: 'Gruppenbild 2021 im Biergarten mit geschmücktem Laternenstab' }],
+        location: 'Kiesplatz mit Palmen und Biergarten-Atmosphäre',
+        shirts: 'Olivgrüne T-Shirts',
+        note: 'Manni sichert sich den Titel mit 17 Bieren.'
+      },
+      2020: {
+        number: 16,
+        photos: [{ file: '2020.jpeg', caption: 'Gruppenbild 2020 Café am Markt (Königsblaue Shirts)' }],
+        location: 'Marktplatz vor dem Café am Markt',
+        shirts: 'Königsblaue T-Shirts',
+        note: 'Allzeit-Bierrekord: 213 Gesamtbiere! Clemens und Mirko gewinnen gemeinsam mit je 20 Bieren.'
+      },
+      2019: {
+        number: 15,
+        photos: [{ file: '2019.jpeg', caption: 'Gruppenbild 2019 Hotel zur Post (Lila T-Shirts)' }],
+        location: 'Hotel zur Post an der Hauptstraße',
+        shirts: 'Lila / Violette T-Shirts mit Bierglas-Motiv',
+        note: 'Manni stellt den ewigen Einzel-Rekord mit 24 Bieren auf!'
+      },
+      2018: {
+        number: 14,
+        photos: [{ file: '2018.jpeg', caption: 'Gruppenbild 2018 Pickmühle Weg an der Flaschenmauer' }],
+        location: 'Pickmühle Weg, Natursteinmauer voll mit leeren Bierflaschen',
+        shirts: 'Olivfarbene T-Shirts mit Wanderstöcken',
+        note: 'Manni holt 22 Biere • Konrad erhält die Rote Laterne mit legendärem 1 Bier.'
+      },
+      2017: {
+        number: 13,
+        photos: [{ file: '2017.jpeg', caption: 'Gruppenbild 2017 Gasthaus unter Hirschgeweih-Kronleuchter' }],
+        location: 'Uriges Gasthaus / Wirtshaus am langen Holztisch',
+        shirts: 'Schwarze T-Shirts',
+        note: 'Manni wird Bierkönig mit 23 Bieren.'
+      },
+      2016: {
+        number: 12,
+        photos: [{ file: '2016.jpeg', caption: 'Gruppenbild 2016 mit leuchtender Zunftlaterne und Zähler-Shirts' }],
+        location: 'Hütte mit Zähler-Aufdrucken (12/12, 15/15, 16/16) und Laterne',
+        shirts: 'Dunkelgrüne T-Shirts mit individuellem Konsum-Zähler',
+        note: 'Manni siegt mit 23 Bieren • 173 Biere Gesamtvolumen.'
+      },
+      2015: {
+        number: 11,
+        photos: [{ file: '2015.jpeg', caption: 'Gruppenbild 2015 unter dem Apfelbaum im Sonnenschein' }],
+        location: 'Idyllische Streuobstwiese bei strahlendem Sonnenschein',
+        shirts: 'Blaue T-Shirts mit rundem Bierwanderungs-Logo',
+        note: 'Manni sichert sich seinen allerersten Bierkönig-Titel mit 23 Bieren!'
+      },
+      2014: {
+        number: 10,
+        photos: [],
+        location: '10. Jubiläums-Bierwanderung',
+        shirts: 'Jubiläumsrunde',
+        note: 'Clemens siegt souverän mit 21 Bieren.'
+      },
+      2013: {
+        number: 9,
+        photos: [],
+        location: 'Fränkische Bierwanderung',
+        shirts: 'Traditionstour',
+        note: 'Glassi holt seinen 2. Bierkönig-Titel mit 15 Bieren.'
+      },
+      2012: {
+        number: 8,
+        photos: [],
+        location: 'Fränkische Bierwanderung',
+        shirts: 'Traditionstour',
+        note: 'Clemens triumphiert mit 18 Bieren.'
+      },
+      2011: {
+        number: 7,
+        photos: numberedArchive(2011, 9, 121, n => `Bierwanderung- 2011_${String(n).padStart(3, '0')}.jpg`),
+        location: 'Traditionsroute',
+        shirts: 'Traditionstour',
+        note: 'Clemens siegt mit 21 Bieren knapp vor Konrad (20 Biere).'
+      },
+      2010: {
+        number: 6,
+        photos: [],
+        location: 'Traditionsroute',
+        shirts: 'Traditionstour',
+        note: 'Mirko sichert sich den Titel mit 15 Bieren.'
+      },
+      2009: {
+        number: 5,
+        photos: numberedArchive(2009, 1, 138, n => `Bierwanderung 2009_${String(n).padStart(3, '0')}.jpg`),
+        location: '5. Jubiläumswanderung',
+        shirts: 'Jubiläumsrunde',
+        note: 'Clemens gewinnt seinen 1. Bierkönig-Titel mit 20 Bieren.'
+      },
+      2008: {
+        number: 4,
+        photos: [{ file: '2008.jpeg', caption: 'Gruppenbild 2008 vor Blumenrabatte (Blaue Shirts & Flaschen-Print)' }],
+        location: 'Wanderpfad mit Blumenrabatte',
+        shirts: 'Blaue T-Shirts mit weißem Flaschen-Print',
+        note: 'Mirko feiert seinen allerersten Titel mit 17 Bieren.'
+      },
+      2007: {
+        number: 3,
+        photos: numberedArchive(2007, 2590, 2635, n => `PICT${n}.JPG`),
+        location: 'Wiesenhang im Grünen mit erhobenen Bierflaschen',
+        shirts: 'Klassische blaue T-Shirts',
+        note: 'Glassi wird der 1. offizielle Bierkönig mit 19 Bieren vor Konrad (18).'
+      },
+      2006: {
+        number: 2,
+        photos: archivePhotos(2006, ['100_5519.jpg', '100_5518.jpg', '100_5525.jpg', '100_5520.jpg', '100_5496.jpg', '100_5495.jpg', '100_5507.jpg', '100_5508.jpg', '100_5513.jpg', '100_5514.jpg', '100_5526.jpg', '100_5527.jpg', '100_5531.jpg', '100_5532.jpg']),
+        location: 'Breitenlesau (Brauerei Krug) & Zechenreuth',
+        shirts: 'Pionierrunde / Schemat \'06',
+        note: '2. Bierwanderung mit allen 12 Pionieren • Einkehr im Krug-Bräu Breitenlesau & Kult-Glasfleisch.'
+      },
+      2005: {
+        number: 1,
+        photos: [],
+        location: 'Die allererste Bierwanderung!',
+        shirts: 'Die 8 Gründerväter',
+        note: 'Geburtsstunde der Bierwanderung mit 8 Wanderern: Volker, Glassi, Frank, Kubi, Mike L., Daniel, Mirko und Sören.'
+      }
+    };
+
+    // Gruppenbilder erscheinen immer zuerst im jeweiligen Jahresalbum. Für 2009
+    // und 2011 liegt kein separates Gruppenbild im bereitgestellten Ordner vor;
+    // dort startet das Album direkt mit dem ersten Archivfoto.
+    const GROUP_IMAGES = {
+      2006: [['2006.jpg', 'Gruppenbild 2006 · Die Pioniere der 2. Bierwanderung']],
+      2007: [['2007.jpeg', 'Gruppenbild 2007 · Die Wandergruppe im Grünen']],
+      2008: [['2008.jpeg', 'Gruppenbild 2008 · Blaue Shirts am Wanderweg']],
+      2015: [['2015.jpeg', 'Gruppenbild 2015 · Unter dem Apfelbaum']],
+      2016: [['2016.jpeg', 'Gruppenbild 2016 · Mit Zunftlaterne']],
+      2017: [['2017.jpeg', 'Gruppenbild 2017 · Im urigen Gasthaus']],
+      2018: [['2018.jpeg', 'Gruppenbild 2018 · An der Flaschenmauer']],
+      2019: [['2019.jpeg', 'Gruppenbild 2019 · Hotel zur Post']],
+      2020: [['2020.jpeg', 'Gruppenbild 2020 · Café am Markt']],
+      2021: [['2021.jpeg', 'Gruppenbild 2021 · Im Biergarten']],
+      2022: [['2022.jpeg', 'Gruppenbild 2022 · Mit Laterne']],
+      2023: [['2023.jpg', 'Gruppenbild 2023 · Vor dem historischen Tor'], ['2023-2.jpg', 'Gruppenbild 2023 · Zweite Aufnahme']],
+      2024: [['2024.jpg', 'Gruppenbild 2024 · Vor dem Blumenhaus']],
+      2025: [['2025.jpg', 'Gruppenbild 2025 · Hotel zur Post']],
+      2026: [['2026.jpeg', 'Gruppenbild 2026 · Vor der Restaurace']]
+    };
+    Object.entries(GROUP_IMAGES).forEach(([year, images]) => {
+      const meta = BIERWANDERUNGEN_META[year];
+      const groupNames = images.map(([filename]) => filename);
+      const remaining = (meta.photos || []).filter(photo =>
+        !groupNames.some(filename => photo.file === filename || photo.file.endsWith('/' + filename))
+      );
+      meta.photos = images.map(([filename, caption]) => groupPhoto(filename, caption)).concat(remaining);
+    });
+    // 2009 besitzt ein Gruppenfoto im Jahresarchiv. Für 2011 wurde die beste
+    // vorhandene Aufnahme mit mehreren Wanderern als Titelbild gewählt.
+    const promoteArchivePhoto = (year, filename, caption) => {
+      const file = GITHUB_IMAGE_BASE + year + '/' + encodeURIComponent(filename);
+      const meta = BIERWANDERUNGEN_META[year];
+      meta.photos = [{ file, caption }].concat((meta.photos || []).filter(photo => photo.file !== file));
+    };
+    promoteArchivePhoto(2009, 'Bierwanderung 2009_001.jpg', 'Gruppenbild 2009 · Die Wandergruppe der Jubiläumswanderung');
+    promoteArchivePhoto(2011, 'Bierwanderung- 2011_092.jpg', 'Wandergruppe 2011 · Gemeinsame Aufnahme auf der Traditionsroute');
+
+    let currentBwFilter = 'all';
+    const bwExpandedYears = new Set(); // Stores which years are currently expanded
+
+    function toggleBwYear(year) {
+      const card = document.getElementById(`bw-year-${year}`);
+      const body = document.getElementById(`bw-body-${year}`);
+      if (!card || !body) return;
+
+      if (bwExpandedYears.has(year)) {
+        bwExpandedYears.delete(year);
+        card.classList.remove('open');
+        body.style.display = 'none';
+      } else {
+        bwExpandedYears.add(year);
+        card.classList.add('open');
+        body.style.display = 'block';
+      }
+    }
+
+    function expandAllBwYears() {
+      for (let y = 2026; y >= 2005; y--) {
+        bwExpandedYears.add(y);
+        const card = document.getElementById(`bw-year-${y}`);
+        const body = document.getElementById(`bw-body-${y}`);
+        if (card) card.classList.add('open');
+        if (body) body.style.display = 'block';
+      }
+    }
+
+    function collapseAllBwYears() {
+      bwExpandedYears.clear();
+      for (let y = 2026; y >= 2005; y--) {
+        const card = document.getElementById(`bw-year-${y}`);
+        const body = document.getElementById(`bw-body-${y}`);
+        if (card) card.classList.remove('open');
+        if (body) body.style.display = 'none';
+      }
+    }
+
+    function renderBierwanderungen(filterType = 'all') {
+      currentBwFilter = filterType;
+      const container = document.getElementById('bw-years-container');
+      const select = document.getElementById('bw-year-jump');
+      if (!container) return;
+
+      // Populate Select Jump Dropdown once
+      if (select && select.options.length <= 1) {
+        select.innerHTML = '<option value="">Jahr auswählen & öffnen...</option>';
+        for (let y = 2026; y >= 2005; y--) {
+          const meta = BIERWANDERUNGEN_META[y];
+          const opt = document.createElement('option');
+          opt.value = y;
+          opt.textContent = `${y} (${meta ? meta.number + '. Tour' : ''})`;
+          select.appendChild(opt);
+        }
+      }
+
+      let html = '';
+      const years = [];
+      for (let y = 2026; y >= 2005; y--) {
+        years.push(y);
+      }
+
+      years.forEach(year => {
+        const meta = BIERWANDERUNGEN_META[year] || { number: year - 2004, photos: [], note: '' };
+        const hasCustom = !!localStorage.getItem(`bw_custom_img_${year}_custom`);
+        const hasPhotos = (meta.photos && meta.photos.length > 0) || hasCustom;
+
+        // Apply Filter
+        if (filterType === 'photos' && !hasPhotos) return;
+        if (filterType === 'founders' && year > 2006) return;
+
+        const yearKonsum = KONSUM.filter(k => k.jahr === year).sort((a, b) => b.biere - a.biere);
+        const totalBiere = yearKonsum.reduce((sum, k) => sum + k.biere, 0);
+        const participantsCount = yearKonsum.length;
+
+        // Bierkönig(e) ermitteln
+        let kingHtml = '';
+        if (totalBiere === 0 || year <= 2006) {
+          kingHtml = `
+            <div class="bw-king-card" style="background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(30, 41, 59, 0.4)); border-color: rgba(96, 165, 250, 0.3);">
+              <div class="bw-king-icon">🏛️</div>
+              <div class="bw-king-text">
+                <div class="bw-king-label" style="color: #93c5fd;">Gründungsrunde • Keine Einzelzählung</div>
+                <div class="bw-king-name">Alle ${participantsCount} Pioniere als Gründerväter geehrt</div>
+              </div>
+            </div>
+          `;
+        } else if (yearKonsum.length > 0) {
+          const maxBeer = yearKonsum[0].biere;
+          const kings = yearKonsum.filter(k => k.biere === maxBeer);
+          const kingNames = kings.map(k => {
+            const w = wandererMap.get(k.wid);
+            return w ? w.name : 'Unbekannt';
+          }).join(' & ');
+
+          if (kings.length > 1) {
+            kingHtml = `
+              <div class="bw-king-card">
+                <div class="bw-king-icon">👑</div>
+                <div class="bw-king-text">
+                  <div class="bw-king-label">Geteilter 1. Platz (Bierkönige ${year})</div>
+                  <div class="bw-king-name">${kingNames} mit je ${maxBeer} Bieren! 🍻</div>
+                </div>
+              </div>
+            `;
+          } else {
+            kingHtml = `
+              <div class="bw-king-card">
+                <div class="bw-king-icon">👑</div>
+                <div class="bw-king-text">
+                  <div class="bw-king-label">Offizieller Bierkönig ${year}</div>
+                  <div class="bw-king-name">${kingNames} mit ${maxBeer} Bieren! 🍻</div>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        const isKonrad = isKonradLoggedIn();
+
+        // Gruppenbilder
+        let photosHtml = '';
+        const folderYears = [2006, 2007, 2009, 2011];
+        const isFolderYear = folderYears.includes(year);
+        const folderBadge = isFolderYear ? `
+          <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255, 184, 0, 0.08); border: 1px solid rgba(255, 184, 0, 0.2); border-radius: 8px; padding: 6px 10px; margin-bottom: 10px; font-size: 0.75rem;">
+            <span style="color: #fef08a; display: flex; align-items: center; gap: 6px;">
+              <span>📁</span> <strong>GitHub Ordner:</strong> images/${year}/
+            </span>
+            ${isKonrad ? `
+              <button type="button" class="chip-btn" style="padding: 2px 8px; font-size: 0.7rem; border-color: rgba(255,184,0,0.4); color: #fef08a;" onclick="openKonradFolder(${year})">
+                📂 Ordner öffnen ↗
+              </button>
+            ` : '<span style="color: var(--text-muted); font-size: 0.7rem;">(Nur Ansicht)</span>'}
+          </div>
+        ` : '';
+
+        if (meta.photos && meta.photos.length > 0) {
+          const isTwo = meta.photos.length === 2;
+          const isMulti = meta.photos.length > 2;
+          photosHtml = folderBadge + `
+            ${isMulti ? `
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 6px 12px;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #fef08a; display: flex; align-items: center; gap: 6px;">
+                  <span>🖼️</span> Fotogalerie ${year} (${meta.photos.length} Fotos im Archiv)
+                </span>
+                <span style="font-size: 0.72rem; color: var(--text-muted);">Tippen zum Vergrößern & Blättern</span>
+              </div>
+            ` : ''}
+            <div class="bw-photos-grid ${isTwo ? 'two-cols' : (isMulti ? 'multi-cols' : '')}">
+          `;
+          meta.photos.forEach((photo, pIdx) => {
+            const baseFileName = photo.file.split('/').pop();
+            const customSrc = localStorage.getItem(`bw_custom_img_${year}_${photo.file}`) || 
+                              localStorage.getItem(`bw_custom_img_${year}_${baseFileName}`) ||
+                              localStorage.getItem(`bw_custom_img_${year}_custom`) ||
+                              localStorage.getItem(`bw_custom_img_${year}`);
+            const imgSrc = customSrc || photo.file;
+            const isHero = isMulti && pIdx === 0;
+            photosHtml += `
+              <div class="bw-photo-card ${isHero ? 'hero-photo' : ''}">
+                <div class="bw-photo-frame" onclick="openBwLightbox('${imgSrc}', '${escapeHtml(photo.caption)}', ${year}, ${pIdx})">
+                  <img src="${imgSrc}" 
+                       alt="${escapeHtml(photo.caption)}" 
+                       class="bw-img" 
+                       loading="lazy"
+                       onerror="handleBwImgError(this, ${year}, '${photo.file}', '${escapeHtml(photo.caption)}')">
+                  <div class="bw-photo-overlay">
+                    <span>🔍 Foto vergrößern</span>
+                  </div>
+                  ${isHero ? `<div class="bw-photo-badge">⭐ Haupt-Gruppenbild ${year}</div>` : ''}
+                </div>
+                <div class="bw-photo-caption" style="display: flex; justify-content: space-between; align-items: center;">
+                  <span>📸 ${escapeHtml(photo.caption)}</span>
+                  ${(customSrc && isKonrad) ? `<button type="button" class="chip-btn" style="padding: 2px 8px; font-size: 0.68rem; color: #f87171;" onclick="event.stopPropagation(); removeCustomPhoto(${year})">✕ Zurücksetzen</button>` : ''}
+                </div>
+              </div>
+            `;
+          });
+          photosHtml += `</div>`;
+        } else if (hasCustom) {
+          const customSrc = localStorage.getItem(`bw_custom_img_${year}_custom`);
+          photosHtml = folderBadge + `
+            <div class="bw-photo-card" style="margin-bottom: 14px;">
+              <div class="bw-photo-frame" onclick="openBwLightbox('${customSrc}', 'Gruppenbild ${year}')">
+                <img src="${customSrc}" alt="Gruppenbild ${year}" class="bw-img" />
+                <div class="bw-photo-overlay"><span>🔍 Vergrößern</span></div>
+              </div>
+              <div class="bw-photo-caption" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>📸 Eigenes Gruppenbild ${year}</span>
+                ${isKonrad ? `<button type="button" class="chip-btn" style="padding: 2px 8px; font-size: 0.7rem; color: #f87171;" onclick="removeCustomPhoto(${year})">✕ Entfernen</button>` : ''}
+              </div>
+            </div>
+          `;
+        } else {
+          photosHtml = folderBadge + `
+            <div class="bw-no-photo-card">
+              <div style="font-size: 1.8rem; margin-bottom: 4px;">📷</div>
+              <div style="font-weight: 700; color: #d1d5db; font-size: 0.85rem;">Kein Gruppenbild für ${year} im Archiv</div>
+              <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; margin-bottom: 8px;">
+                ${isKonrad ? 'Als Administrator Konrad kannst du hier ein Foto für dieses Jahr hochladen:' : 'Für dieses Jahr wurde noch kein Gruppenbild hinterlegt.'}
+              </div>
+              ${isKonrad ? `
+                <input type="file" id="bw-file-add-${year}" style="display: none;" accept="image/*,.jpeg,.jpg,.png,.webp,.jepg" onchange="loadLocalPhoto(event, ${year}, 'custom')">
+                <button type="button" class="chip-btn" style="border-color: rgba(255, 184, 0, 0.4); color: var(--primary); font-size: 0.75rem; padding: 4px 10px;" onclick="document.getElementById('bw-file-add-${year}').click()">
+                  ➕ Foto für ${year} auswählen
+                </button>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        // Kontext-Infos (Location, Shirts)
+        let contextHtml = '';
+        if (meta.location || meta.shirts) {
+          contextHtml = `
+            <div class="bw-context-info">
+              ${meta.location ? `<div>📍 <strong>Ort:</strong> ${meta.location}</div>` : ''}
+              ${meta.shirts ? `<div>👕 <strong>T-Shirts:</strong> ${meta.shirts}</div>` : ''}
+            </div>
+          `;
+        }
+
+        // Teilnehmerliste
+        let participantsRows = '';
+        const maxBeer = (yearKonsum.length > 0 && yearKonsum[0].biere > 0) ? yearKonsum[0].biere : 1;
+        const minBeer = (yearKonsum.length > 0) ? yearKonsum[yearKonsum.length - 1].biere : 0;
+
+        yearKonsum.forEach((item, idx) => {
+          const w = wandererMap.get(item.wid);
+          const wName = w ? w.name : 'Wanderer #' + item.wid;
+          let rankIcon = `${idx + 1}.`;
+          if (item.biere > 0) {
+            if (idx === 0) rankIcon = '🥇';
+            else if (idx === 1) rankIcon = '🥈';
+            else if (idx === 2) rankIcon = '🥉';
+            else if (item.biere === minBeer && yearKonsum.length > 2) rankIcon = '🏮';
+          } else {
+            rankIcon = '🥾';
+          }
+
+          const pct = totalBiere > 0 ? Math.round((item.biere / maxBeer) * 100) : 0;
+          const beerText = (totalBiere === 0 || year <= 2006) ? 'Teilnehmer' : `${item.biere} ${item.biere === 1 ? 'Bier' : 'Biere'}`;
+
+          participantsRows += `
+            <div class="bw-participant-row">
+              <div class="bw-participant-bar" style="width: ${pct}%;"></div>
+              <div class="bw-participant-left">
+                <span class="bw-rank-icon">${rankIcon}</span>
+                <span class="bw-participant-name">${escapeHtml(wName)}</span>
+              </div>
+              <div class="bw-participant-beers">${beerText}</div>
+            </div>
+          `;
+        });
+
+        const participantsHtml = `
+          <div style="margin-top: 12px;">
+            <button type="button" class="bw-participants-toggle" onclick="toggleBwParticipants(${year})">
+              <span>👥 Alle Teilnehmer (${participantsCount} Wanderer)</span>
+              <span id="bw-toggle-icon-${year}">▼</span>
+            </button>
+            <div id="bw-participants-box-${year}" class="bw-participants-list" style="display: none;">
+              ${participantsRows}
+            </div>
+          </div>
+        `;
+
+        // Highlight Note
+        let noteHtml = '';
+        if (meta.note) {
+          noteHtml = `
+            <div class="bw-highlight-banner">
+              <span>💡</span>
+              <span><strong>Highlight:</strong> ${escapeHtml(meta.note)}</span>
+            </div>
+          `;
+        }
+
+        const isExpanded = bwExpandedYears.has(year);
+
+        html += `
+          <div class="bw-year-card ${isExpanded ? 'open' : ''}" id="bw-year-${year}">
+            <div class="bw-year-header" onclick="toggleBwYear(${year})" role="button" tabindex="0" title="Klicken, um ${year} Details auf- oder zuzuklappen">
+              <div class="bw-year-title">
+                <span class="bw-year-badge">${year}</span>
+                <span class="bw-tour-num">${meta.number}. Bierwanderung</span>
+                <span class="bw-year-chevron">▼</span>
+              </div>
+              <div class="bw-stats-pills">
+                <span class="bw-stat-pill">🍺 ${totalBiere > 0 ? totalBiere + ' Biere' : 'Gründungsjahr'}</span>
+                <span class="bw-stat-pill">👥 ${participantsCount} Wanderer</span>
+                ${hasPhotos ? '<span class="bw-stat-pill" style="color: #fef08a; border-color: rgba(255,184,0,0.4);">📸 Foto</span>' : ''}
+              </div>
+            </div>
+
+            <div class="bw-year-body" id="bw-body-${year}" style="display: ${isExpanded ? 'block' : 'none'};">
+              ${kingHtml}
+              ${photosHtml}
+              ${contextHtml}
+              ${noteHtml}
+              ${participantsHtml}
+            </div>
+          </div>
+        `;
+      });
+
+      if (!html) {
+        html = `
+          <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">🔍</div>
+            <p>Keine Einträge für den gewählten Filter gefunden.</p>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function filterBwYear(type, btn) {
+      document.querySelectorAll('.bw-filter-pill').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderBierwanderungen(type);
+    }
+
+    function jumpToBwYear(year) {
+      if (!year) return;
+      year = parseInt(year, 10);
+      if (currentBwFilter !== 'all') {
+        filterBwYear('all', document.querySelector('.bw-filter-pill'));
+      }
+      // Ensure year is expanded
+      bwExpandedYears.add(year);
+      const card = document.getElementById(`bw-year-${year}`);
+      const body = document.getElementById(`bw-body-${year}`);
+      if (card) card.classList.add('open');
+      if (body) body.style.display = 'block';
+
+      setTimeout(() => {
+        const elem = document.getElementById(`bw-year-${year}`);
+        if (elem) {
+          elem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          elem.style.boxShadow = '0 0 24px rgba(255, 184, 0, 0.6)';
+          elem.style.borderColor = 'var(--primary)';
+          setTimeout(() => {
+            elem.style.boxShadow = '';
+            elem.style.borderColor = '';
+          }, 2500);
+        }
+      }, 100);
+    }
+
+    function toggleBwParticipants(year) {
+      const box = document.getElementById(`bw-participants-box-${year}`);
+      const icon = document.getElementById(`bw-toggle-icon-${year}`);
+      if (!box) return;
+      const isHidden = box.style.display === 'none';
+      box.style.display = isHidden ? 'flex' : 'none';
+      if (icon) icon.textContent = isHidden ? '▲' : '▼';
+    }
+
+    // Lightbox Steuerung & Galerie-Navigation
+    let currentLightboxPhotos = [];
+    let currentLightboxIdx = 0;
+
+    function openBwLightbox(src, caption, year, photoIndex) {
+      const modal = document.getElementById('bw-lightbox-modal');
+      const img = document.getElementById('bw-lightbox-img');
+      if (!modal || !img) return;
+
+      if (year && BIERWANDERUNGEN_META[year] && BIERWANDERUNGEN_META[year].photos && BIERWANDERUNGEN_META[year].photos.length > 0) {
+        currentLightboxPhotos = BIERWANDERUNGEN_META[year].photos.map(p => {
+          const baseName = p.file.split('/').pop();
+          const customSrc = localStorage.getItem(`bw_custom_img_${year}_${p.file}`) || 
+                            localStorage.getItem(`bw_custom_img_${year}_${baseName}`) ||
+                            localStorage.getItem(`bw_custom_img_${year}_custom`) ||
+                            localStorage.getItem(`bw_custom_img_${year}`);
+          return {
+            src: customSrc || p.file,
+            caption: p.caption,
+            year: year,
+            file: p.file
+          };
+        });
+        currentLightboxIdx = (photoIndex !== undefined && photoIndex >= 0) ? photoIndex : 0;
+      } else {
+        currentLightboxPhotos = [{ src: src, caption: caption || '' }];
+        currentLightboxIdx = 0;
+      }
+
+      updateLightboxDisplay();
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function updateLightboxDisplay() {
+      const img = document.getElementById('bw-lightbox-img');
+      const cap = document.getElementById('bw-lightbox-caption');
+      const counter = document.getElementById('bw-lightbox-counter');
+      const prevBtn = document.getElementById('bw-lightbox-prev-btn');
+      const nextBtn = document.getElementById('bw-lightbox-next-btn');
+      if (!img || currentLightboxPhotos.length === 0) return;
+
+      const item = currentLightboxPhotos[currentLightboxIdx];
+      img.src = item.src;
+      img.alt = item.caption || 'Gruppenbild Großansicht';
+      if (cap) cap.textContent = item.caption || '';
+      if (counter) {
+        if (currentLightboxPhotos.length > 1) {
+          counter.textContent = `${currentLightboxIdx + 1} / ${currentLightboxPhotos.length}`;
+          counter.style.display = 'block';
+        } else {
+          counter.style.display = 'none';
+        }
+      }
+      if (prevBtn) prevBtn.style.display = currentLightboxPhotos.length > 1 ? 'flex' : 'none';
+      if (nextBtn) nextBtn.style.display = currentLightboxPhotos.length > 1 ? 'flex' : 'none';
+    }
+
+    function navigateBwLightbox(direction) {
+      if (currentLightboxPhotos.length <= 1) return;
+      currentLightboxIdx = (currentLightboxIdx + direction + currentLightboxPhotos.length) % currentLightboxPhotos.length;
+      updateLightboxDisplay();
+    }
+
+    function closeBwLightbox(event) {
+      if (event && event.target && (event.target.id === 'bw-lightbox-img' || event.target.closest('.bw-lightbox-nav-btn'))) return;
+      const modal = document.getElementById('bw-lightbox-modal');
+      if (modal) modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Keyboard navigation for lightbox
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('bw-lightbox-modal');
+      if (!modal || !modal.classList.contains('active')) return;
+      if (e.key === 'ArrowLeft') {
+        navigateBwLightbox(-1);
+      } else if (e.key === 'ArrowRight') {
+        navigateBwLightbox(1);
+      } else if (e.key === 'Escape') {
+        closeBwLightbox();
+      }
+    });
+
+    // Bild-Fehlerbehandlung (Fallback UI falls Datei am relativen Pfad noch nicht liegt)
+    function handleBwImgError(imgElem, year, filename, caption) {
+      if (!imgElem) return;
+      const baseName = filename ? filename.split('/').pop() : '';
+      if (!imgElem.dataset.retried) {
+        imgElem.dataset.retried = '1';
+        imgElem.src = `images/${year}/${baseName}`;
+        return;
+      }
+      if (imgElem.dataset.retried === '1') {
+        imgElem.dataset.retried = '2';
+        imgElem.src = `images/${baseName}`;
+        return;
+      }
+      if (imgElem.dataset.retried === '2') {
+        imgElem.dataset.retried = '3';
+        imgElem.src = `./${baseName}`;
+        return;
+      }
+      if (imgElem.dataset.retried === '3') {
+        imgElem.dataset.retried = '4';
+        imgElem.src = baseName;
+        return;
+      }
+      if (imgElem.dataset.retried === '4') {
+        imgElem.dataset.retried = '5';
+        if (baseName.endsWith('.jpeg')) {
+          imgElem.src = `images/${year}/` + baseName.replace('.jpeg', '.jpg');
+          return;
+        } else if (baseName.endsWith('.jpg')) {
+          imgElem.src = `images/${year}/` + baseName.replace('.jpg', '.jpeg');
+          return;
+        }
+      }
+      if (imgElem.dataset.retried === '5' && year === 2006 && (baseName === '2006.jpg' || baseName === '2006.jpeg')) {
+        imgElem.dataset.retried = '6';
+        imgElem.src = 'images/2006/100_5519.jpg';
+        return;
+      }
+
+      const parent = imgElem.closest('.bw-photo-frame');
+      const isKonrad = isKonradLoggedIn();
+      if (parent) {
+        parent.onclick = null;
+        parent.innerHTML = `
+          <div class="bw-img-fallback">
+            <div style="font-size: 2.2rem; margin-bottom: 6px;">📷</div>
+            <div style="font-weight: 700; color: #fef08a; font-size: 0.9rem;">Foto ${year}</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; line-height: 1.3;">${caption}</div>
+            <div style="font-size: 0.72rem; color: #9ca3af; margin-top: 6px; font-family: monospace;">Dateiname: ${baseName} (Ordner: images/${year}/)</div>
+            ${isKonrad ? `
+              <div style="margin-top: 10px;">
+                <input type="file" id="bw-fallback-file-${year}-${baseName.replace(/[^a-zA-Z0-9]/g, '_')}" style="display: none;" accept="image/*,.jpeg,.jpg,.png,.webp,.jepg" onchange="loadLocalPhoto(event, ${year}, '${baseName}')">
+                <button type="button" class="chip-btn" style="border-color: var(--primary); color: var(--primary); font-size: 0.75rem; padding: 4px 10px;" onclick="document.getElementById('bw-fallback-file-${year}-${baseName.replace(/[^a-zA-Z0-9]/g, '_')}').click()">
+                  📁 Foto lokal auswählen & speichern
+                </button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+    }
+
+    function openKonradFolder(year) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur Konrad kann Bilder in die Ordner hochladen.');
+        return;
+      }
+      // Automatisches Öffnen und Ansteuern des Jahres in der Chronik
+      jumpToBwYear(year);
+      // Dialog zur Auswahl anbieten
+      const uploadChoice = confirm(`Ordner "images/${year}/" für Konrad geöffnet!\n\nMöchtest du jetzt direkt ein Bild für das Jahr ${year} auswählen und speichern?`);
+      if (uploadChoice) {
+        const input = document.getElementById(`bw-file-add-${year}`) || document.getElementById(`bw-fallback-file-${year}`) || document.getElementById('bw-batch-files-input');
+        if (input) input.click();
+      }
+    }
+
+    function loadLocalPhoto(event, year, filename) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Fotos für die Bierwanderungen hochladen.');
+        return;
+      }
+      const file = event.target.files[0];
+      if (!file) return;
+      processPhotoFile(file, year, filename);
+    }
+
+    function processPhotoFile(file, specifiedYear, specifiedFilename) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Gruppenbilder hochladen.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        let targetYear = specifiedYear;
+        let targetFile = specifiedFilename;
+
+        if (!targetYear) {
+          // Auto-detect year from filename (e.g., 2024.jepg, 2024.jpeg, 2024.jpg -> 2024)
+          const m = file.name.match(/(20\d\d)/);
+          if (m) {
+            targetYear = parseInt(m[1], 10);
+            targetFile = file.name;
+          }
+        }
+
+        if (targetYear && BIERWANDERUNGEN_META[targetYear]) {
+          try {
+            const meta = BIERWANDERUNGEN_META[targetYear];
+            // Store under year and actual filename
+            localStorage.setItem(`bw_custom_img_${targetYear}_${targetFile || file.name}`, dataUrl);
+            // Store under year folder path (e.g. images/2006/2006.jpg)
+            localStorage.setItem(`bw_custom_img_${targetYear}_images/${targetYear}/${targetFile || file.name}`, dataUrl);
+            // Store for matching meta photo filename (or all if single-photo year/custom)
+            if (meta.photos) {
+              const fBase = (targetFile || file.name).split('/').pop();
+              const isSpecific = meta.photos.some(p => p.file.split('/').pop() === fBase || p.file === targetFile);
+              meta.photos.forEach((p, idx) => {
+                const pBase = p.file.split('/').pop();
+                if (isSpecific) {
+                  if (pBase === fBase || p.file === targetFile || p.file === file.name) {
+                    localStorage.setItem(`bw_custom_img_${targetYear}_${p.file}`, dataUrl);
+                    localStorage.setItem(`bw_custom_img_${targetYear}_${pBase}`, dataUrl);
+                  }
+                } else if (!isSpecific && idx === 0) {
+                  // If not a specific matching photo name, set as primary photo
+                  localStorage.setItem(`bw_custom_img_${targetYear}_${p.file}`, dataUrl);
+                  localStorage.setItem(`bw_custom_img_${targetYear}_${pBase}`, dataUrl);
+                }
+              });
+            }
+            // If year has specific requested format, store under expected default
+            if (targetYear === 2006) {
+              const fBase = (targetFile || file.name).split('/').pop();
+              if (fBase === '2006.jpg' || fBase === '2006.jpeg' || targetFile === 'custom') {
+                localStorage.setItem(`bw_custom_img_2006_images/2006/100_5519.jpg`, dataUrl);
+                localStorage.setItem(`bw_custom_img_2006_100_5519.jpg`, dataUrl);
+                localStorage.setItem(`bw_custom_img_2006_2006.jpg`, dataUrl);
+              }
+            }
+            if (targetYear === 2024) {
+              localStorage.setItem(`bw_custom_img_2024_2024.jpg`, dataUrl);
+              localStorage.setItem(`bw_custom_img_2024_2024.jpeg`, dataUrl);
+            }
+            // Also store as general custom photo for the year
+            localStorage.setItem(`bw_custom_img_${targetYear}_custom`, dataUrl);
+            localStorage.setItem(`bw_custom_img_${targetYear}`, dataUrl);
+          } catch (err) {
+            console.warn('LocalStorage Quota:', err);
+          }
+          // Automatically expand the year so user sees the newly uploaded image immediately!
+          bwExpandedYears.add(targetYear);
+        } else if (targetYear) {
+          try {
+            localStorage.setItem(`bw_custom_img_${targetYear}_custom`, dataUrl);
+            localStorage.setItem(`bw_custom_img_${targetYear}`, dataUrl);
+          } catch (err) {}
+          bwExpandedYears.add(targetYear);
+        }
+        renderBierwanderungen(currentBwFilter);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleBatchPhotoUpload(event) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Gruppenbilder hochladen.');
+        return;
+      }
+      const files = event.target.files;
+      if (!files || !files.length) return;
+      Array.from(files).forEach(f => processPhotoFile(f));
+    }
+
+    function handleBwDragOver(e) {
+      if (!isKonradLoggedIn()) return;
+      e.preventDefault();
+      const dropzone = document.getElementById('bw-dropzone');
+      if (dropzone) dropzone.classList.add('dragover');
+    }
+
+    function handleBwDragLeave(e) {
+      e.preventDefault();
+      const dropzone = document.getElementById('bw-dropzone');
+      if (dropzone) dropzone.classList.remove('dragover');
+    }
+
+    function handleBwDrop(e) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Gruppenbilder hochladen.');
+        return;
+      }
+      e.preventDefault();
+      const dropzone = document.getElementById('bw-dropzone');
+      if (dropzone) dropzone.classList.remove('dragover');
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        Array.from(e.dataTransfer.files).forEach(f => processPhotoFile(f));
+      }
+    }
+
+    function removeCustomPhoto(year) {
+      if (!isKonradLoggedIn()) {
+        alert('Nur der Administrator Konrad darf Fotos entfernen oder zurücksetzen.');
+        return;
+      }
+      try {
+        localStorage.removeItem(`bw_custom_img_${year}_custom`);
+        localStorage.removeItem(`bw_custom_img_${year}`);
+        localStorage.removeItem(`bw_custom_img_${year}_${year}.jpg`);
+        localStorage.removeItem(`bw_custom_img_${year}_${year}.jpeg`);
+        const meta = BIERWANDERUNGEN_META[year];
+        if (meta && meta.photos) {
+          meta.photos.forEach(p => {
+            localStorage.removeItem(`bw_custom_img_${year}_${p.file}`);
+          });
+        }
+      } catch (e) {}
+      renderBierwanderungen(currentBwFilter);
+    }
+
+    // Tastatur Event für Lightbox Esc
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeBwLightbox();
+      }
+    });
+
+    // Init on start
+    initStats();
+    renderBierwanderungen();
+    updateModelIndicatorBadge();
+    checkExistingAuth();
+  </script>
+
+  <!-- Lightbox Modal für Gruppenbilder & Chronik-Galerie -->
+  <div id="bw-lightbox-modal" class="bw-lightbox-overlay" onclick="closeBwLightbox(event)">
+    <div class="bw-lightbox-dialog" onclick="event.stopPropagation()">
+      <button type="button" class="bw-lightbox-close-btn" onclick="closeBwLightbox()" title="Schließen (Esc)">✕</button>
+      <button type="button" id="bw-lightbox-prev-btn" class="bw-lightbox-nav-btn prev" onclick="navigateBwLightbox(-1)" title="Vorheriges Bild (←)">‹</button>
+      <button type="button" id="bw-lightbox-next-btn" class="bw-lightbox-nav-btn next" onclick="navigateBwLightbox(1)" title="Nächstes Bild (→)">›</button>
+      <img id="bw-lightbox-img" src="" alt="Gruppenbild Großansicht">
+      <div class="bw-lightbox-caption-bar">
+        <div id="bw-lightbox-caption" class="bw-lightbox-caption"></div>
+        <div id="bw-lightbox-counter" class="bw-lightbox-counter" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
